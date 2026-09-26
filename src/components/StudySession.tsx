@@ -492,11 +492,11 @@ export const StudySession: React.FC<StudySessionProps> = ({
         </div>
       </div>
 
-      {/* 3D Flashcard Container */}
-      <div className="flip-card-container w-full min-h-[360px]">
+      {/* 3D Flashcard Container - zero scroll mobile height */}
+      <div className="flip-card-container w-full min-h-[260px] h-[46vh] max-h-[420px]">
         <div
           onClick={handleFlip}
-          className={`flip-card-inner cursor-pointer select-none ${
+          className={`flip-card-inner cursor-pointer select-none touch-manipulation ${
             isFlipped ? 'is-flipped' : ''
           }`}
         >

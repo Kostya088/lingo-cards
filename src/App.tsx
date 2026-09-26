@@ -4,10 +4,13 @@ import { DeckList } from './components/DeckList';
 import { DeckDetail } from './components/DeckDetail';
 import { StudySession } from './components/StudySession';
 import { SessionSummary } from './components/SessionSummary';
+import { ProfileView } from './components/ProfileView';
+import { BottomNav } from './components/BottomNav';
 import { DeckModal } from './components/DeckModal';
 import { CardModal } from './components/CardModal';
 import { BulkAddModal } from './components/BulkAddModal';
 import { BackupModal } from './components/BackupModal';
+import { AuthModal } from './components/AuthModal';
 import {
   type DeckWithStats,
   type Deck,
@@ -27,7 +30,7 @@ import {
   exportDeckData,
 } from './db/db';
 
-type ViewMode = 'deck-list' | 'deck-detail' | 'study-session' | 'session-summary';
+type ViewMode = 'deck-list' | 'deck-detail' | 'study-session' | 'session-summary' | 'profile';
 
 export const App: React.FC = () => {
   // Dark mode state
@@ -66,6 +69,7 @@ export const App: React.FC = () => {
 
   const [isBulkAddModalOpen, setIsBulkAddModalOpen] = useState(false);
   const [isBackupModalOpen, setIsBackupModalOpen] = useState(false);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
   // Study Session & Summary State
   const [sessionStats, setSessionStats] = useState<SessionStats | null>(null);
@@ -114,6 +118,14 @@ export const App: React.FC = () => {
     setSelectedDeckId(deck.id);
     await loadCards(deck.id);
     setView('study-session');
+  };
+
+  // Start Study on First Due Deck (triggered from BottomNav)
+  const handleStartDueStudy = async () => {
+    const dueDeck = decks.find((d) => d.dueCount > 0) || decks[0];
+    if (dueDeck) {
+      await handleStartStudy(dueDeck);
+    }
   };
 
   // Deck CRUD Handlers
@@ -198,7 +210,7 @@ export const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors">
+    <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors pb-16 md:pb-0">
       <Navbar
         darkMode={darkMode}
         onToggleDarkMode={toggleDarkMode}
@@ -207,6 +219,11 @@ export const App: React.FC = () => {
           setView('deck-list');
           setSelectedDeckId(null);
         }}
+        onNavigateProfile={() => {
+          setView('profile');
+          setSelectedDeckId(null);
+        }}
+        onOpenAuthModal={() => setIsAuthModalOpen(true)}
       />
 
       <main className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -286,11 +303,48 @@ export const App: React.FC = () => {
                 }}
               />
             )}
+
+            {/* VIEW 5: Account & Cloud Sync Profile */}
+            {view === 'profile' && (
+              <ProfileView
+                decks={decks}
+                onBack={() => {
+                  setView('deck-list');
+                  setSelectedDeckId(null);
+                }}
+                onOpenAuthModal={() => setIsAuthModalOpen(true)}
+                onRefreshData={loadDecks}
+              />
+            )}
           </>
         )}
       </main>
 
+      {/* MOBILE BOTTOM NAVIGATION */}
+      <BottomNav
+        currentView={view}
+        decks={decks}
+        onNavigateHome={() => {
+          setView('deck-list');
+          setSelectedDeckId(null);
+        }}
+        onNavigateProfile={() => {
+          setView('profile');
+          setSelectedDeckId(null);
+        }}
+        onStartDueStudy={handleStartDueStudy}
+      />
+
       {/* MODALS */}
+      {/* Auth Modal (Sign In / Sign Up) */}
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => {
+          setIsAuthModalOpen(false);
+          loadDecks();
+        }}
+      />
+
       {/* Create / Edit Deck Modal */}
       <DeckModal
         isOpen={isDeckModalOpen}
@@ -336,4 +390,5 @@ export const App: React.FC = () => {
     </div>
   );
 };
+
 export default App;

@@ -1,9 +1,20 @@
 import Dexie, { type Table } from 'dexie';
 import { type Deck, type Card, type DeckWithStats } from '../types';
 
+export function generateUUID(): string {
+  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+    return crypto.randomUUID();
+  }
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+    const r = (Math.random() * 16) | 0;
+    const v = c === 'x' ? r : (r & 0x3) | 0x8;
+    return v.toString(16);
+  });
+}
+
 export class FlashcardDatabase extends Dexie {
-  decks!: Table<Deck, string>;
-  cards!: Table<Card, string>;
+  decks!: Table<Deck, any>;
+  cards!: Table<Card, any>;
 
   constructor() {
     super('LingoCardsDB');
@@ -14,55 +25,99 @@ export class FlashcardDatabase extends Dexie {
       cards: '++id, deckId, level, nextReviewDate, createdAt',
     });
 
-    // Schema V2 (UUID strings, soft-deletes, and sync indexes)
-    this.version(2)
-      .stores({
-        decks: 'id, title, targetLanguage, createdAt, updatedAt, isDeleted, userId',
-        cards: 'id, deckId, level, nextReviewDate, createdAt, updatedAt, isDeleted, userId',
-      })
-      .upgrade(async (tx) => {
-        // Safe migration: Convert any existing legacy numerical IDs to UUIDs
-        const decksTable = tx.table('decks');
-        const cardsTable = tx.table('cards');
+    // Schema V2 & V3: Keep ++id for IndexedDB primary key compatibility across all versions
+    this.version(2).stores({
+      decks: '++id, title, targetLanguage, createdAt, updatedAt, isDeleted, userId',
+      cards: '++id, deckId, level, nextReviewDate, createdAt, updatedAt, isDeleted, userId',
+    });
 
-        const existingDecks = await decksTable.toArray();
-        const idMap = new Map<number | string, string>();
-
-        for (const deck of existingDecks) {
-          const legacyId = deck.id;
-          const newId = typeof legacyId === 'number' ? crypto.randomUUID() : (legacyId || crypto.randomUUID());
-          idMap.set(legacyId, newId);
-
-          await decksTable.put({
-            ...deck,
-            id: newId,
-            updatedAt: deck.updatedAt || deck.createdAt || Date.now(),
-            isDeleted: false,
-          });
-        }
-
-        const existingCards = await cardsTable.toArray();
-        for (const card of existingCards) {
-          const newCardId = typeof card.id === 'number' ? crypto.randomUUID() : (card.id || crypto.randomUUID());
-          const mappedDeckId = idMap.get(card.deckId) || String(card.deckId);
-
-          await cardsTable.put({
-            ...card,
-            id: newCardId,
-            deckId: mappedDeckId,
-            updatedAt: card.updatedAt || card.createdAt || Date.now(),
-            isDeleted: false,
-          });
-        }
-      });
+    this.version(3).stores({
+      decks: '++id, title, targetLanguage, createdAt, updatedAt, isDeleted, userId',
+      cards: '++id, deckId, level, nextReviewDate, createdAt, updatedAt, isDeleted, userId',
+    });
   }
 }
 
 export const db = new FlashcardDatabase();
 
+// Runtime fallback migration: ensures that any existing legacy numerical IDs
+// are converted to UUIDs and foreign keys are re-linked even if the Dexie
+// upgrade event was skipped by the browser
+let migrationPromise: Promise<void> | null = null;
+export async function ensureLegacyDataMigrated(): Promise<void> {
+  if (migrationPromise) return migrationPromise;
+
+  migrationPromise = (async () => {
+    try {
+      await db.open();
+      const allDecks = await db.decks.toArray();
+      const hasNumericDecks = allDecks.some((d) => typeof d.id === 'number');
+
+      const allCards = await db.cards.toArray();
+      const hasNumericCards = allCards.some(
+        (c) => typeof c.id === 'number' || typeof c.deckId === 'number'
+      );
+
+      if (!hasNumericDecks && !hasNumericCards) {
+        return;
+      }
+
+      console.log('Migrating legacy numeric decks and cards to UUIDs...');
+      const idMap = new Map<number | string, string>();
+
+      await db.transaction('rw', db.decks, db.cards, async () => {
+        // 1. Migrate Decks
+        for (const deck of allDecks) {
+          if (typeof deck.id === 'number') {
+            const newId = generateUUID();
+            idMap.set(deck.id, newId);
+            await db.decks.delete(deck.id as any);
+            await db.decks.put({
+              ...deck,
+              id: newId,
+              updatedAt: deck.updatedAt || deck.createdAt || Date.now(),
+              isDeleted: Boolean(deck.isDeleted),
+            });
+          }
+        }
+
+        // 2. Migrate Cards
+        for (const card of allCards) {
+          const isNumId = typeof card.id === 'number';
+          const isNumDeckId = typeof card.deckId === 'number';
+
+          if (isNumId || isNumDeckId) {
+            const newCardId = isNumId ? generateUUID() : card.id;
+            const mappedDeckId = isNumDeckId
+              ? (idMap.get(card.deckId) || String(card.deckId))
+              : card.deckId;
+
+            if (isNumId) {
+              await db.cards.delete(card.id as any);
+            }
+            await db.cards.put({
+              ...card,
+              id: newCardId,
+              deckId: mappedDeckId,
+              updatedAt: card.updatedAt || card.createdAt || Date.now(),
+              isDeleted: Boolean(card.isDeleted),
+            });
+          }
+        }
+      });
+      console.log('Legacy data migration completed successfully.');
+    } catch (err) {
+      console.error('Error during legacy data migration:', err);
+    }
+  })();
+
+  return migrationPromise;
+}
+
 // --- Database Helper Methods ---
 
 export async function getAllDecksWithStats(): Promise<DeckWithStats[]> {
+  await ensureLegacyDataMigrated();
   const decks = await db.decks.toArray();
   const now = Date.now();
 
@@ -75,11 +130,18 @@ export async function getAllDecksWithStats(): Promise<DeckWithStats[]> {
 
   for (const deck of activeDecks) {
     if (!deck.id) continue;
-    const cards = await db.cards
+    let cards = await db.cards
       .where('deckId')
       .equals(deck.id)
       .filter((c) => !c.isDeleted)
       .toArray();
+
+    // Fallback in-memory match if type casting differences exist
+    if (cards.length === 0) {
+      cards = await db.cards
+        .filter((c) => !c.isDeleted && String(c.deckId) === String(deck.id))
+        .toArray();
+    }
 
     let newCount = 0;
     let learningCount = 0;
@@ -114,7 +176,7 @@ export async function getAllDecksWithStats(): Promise<DeckWithStats[]> {
 
 export async function createDeck(data: Omit<Deck, 'id' | 'createdAt' | 'updatedAt' | 'isDeleted'>): Promise<string> {
   const now = Date.now();
-  const id = crypto.randomUUID();
+  const id = generateUUID();
   const newDeck: Deck = {
     ...data,
     id,
@@ -135,9 +197,8 @@ export async function updateDeck(id: string, data: Partial<Deck>): Promise<numbe
 
 export async function deleteDeck(id: string): Promise<void> {
   const now = Date.now();
-  // Soft-delete deck and its child cards to propagate deletions to cloud
   await db.transaction('rw', db.decks, db.cards, async () => {
-    const cards = await db.cards.where('deckId').equals(id).toArray();
+    const cards = await getDeckCards(id);
     for (const card of cards) {
       await db.cards.update(card.id, { isDeleted: true, updatedAt: now });
     }
@@ -146,11 +207,29 @@ export async function deleteDeck(id: string): Promise<void> {
 }
 
 export async function getDeckCards(deckId: string): Promise<Card[]> {
-  return await db.cards
+  await ensureLegacyDataMigrated();
+  let cards = await db.cards
     .where('deckId')
     .equals(deckId)
     .filter((c) => !c.isDeleted)
     .toArray();
+
+  if (cards.length === 0 && !isNaN(Number(deckId))) {
+    const numCards = await db.cards
+      .where('deckId')
+      .equals(Number(deckId))
+      .filter((c) => !c.isDeleted)
+      .toArray();
+    if (numCards.length > 0) return numCards;
+  }
+
+  if (cards.length === 0) {
+    cards = await db.cards
+      .filter((c) => !c.isDeleted && String(c.deckId) === String(deckId))
+      .toArray();
+  }
+
+  return cards;
 }
 
 export async function createCard(
@@ -160,7 +239,7 @@ export async function createCard(
   notes?: string
 ): Promise<string> {
   const now = Date.now();
-  const id = crypto.randomUUID();
+  const id = generateUUID();
   const newCard: Card = {
     id,
     deckId,
@@ -187,7 +266,7 @@ export async function createCardsBulk(
 ): Promise<number> {
   const now = Date.now();
   const newCards: Card[] = cardsData.map((c) => ({
-    id: crypto.randomUUID(),
+    id: generateUUID(),
     deckId,
     front: c.front.trim(),
     back: c.back.trim(),
@@ -224,10 +303,12 @@ export async function deleteCard(id: string): Promise<void> {
 // --- Sync Engine Helpers ---
 
 export async function getModifiedDecksSince(timestamp: number): Promise<Deck[]> {
+  await ensureLegacyDataMigrated();
   return await db.decks.where('updatedAt').above(timestamp).toArray();
 }
 
 export async function getModifiedCardsSince(timestamp: number): Promise<Card[]> {
+  await ensureLegacyDataMigrated();
   return await db.cards.where('updatedAt').above(timestamp).toArray();
 }
 
@@ -242,6 +323,7 @@ export async function bulkUpsertCards(cards: Card[]): Promise<void> {
 }
 
 export async function linkGuestDataToUser(userId: string): Promise<{ decksCount: number; cardsCount: number }> {
+  await ensureLegacyDataMigrated();
   let decksCount = 0;
   let cardsCount = 0;
   await db.transaction('rw', db.decks, db.cards, async () => {
@@ -266,6 +348,7 @@ export async function linkGuestDataToUser(userId: string): Promise<{ decksCount:
 // --- Export & Import ---
 
 export async function exportAllData(): Promise<string> {
+  await ensureLegacyDataMigrated();
   const decks = await db.decks.filter((d) => !d.isDeleted).toArray();
   const cards = await db.cards.filter((c) => !c.isDeleted).toArray();
 
@@ -280,13 +363,10 @@ export async function exportAllData(): Promise<string> {
 }
 
 export async function exportDeckData(deckId: string): Promise<string> {
+  await ensureLegacyDataMigrated();
   const deck = await db.decks.get(deckId);
   if (!deck || deck.isDeleted) throw new Error('Deck not found');
-  const cards = await db.cards
-    .where('deckId')
-    .equals(deckId)
-    .filter((c) => !c.isDeleted)
-    .toArray();
+  const cards = await getDeckCards(deckId);
 
   const exportPayload = {
     version: 2,
@@ -302,6 +382,7 @@ export async function importData(
   jsonContent: string,
   mode: 'merge' | 'replace'
 ): Promise<{ decksImported: number; cardsImported: number }> {
+  await ensureLegacyDataMigrated();
   const parsed = JSON.parse(jsonContent);
 
   if (mode === 'replace') {
@@ -319,7 +400,7 @@ export async function importData(
   if (parsed.deck && Array.isArray(parsed.cards)) {
     const originalDeck: Deck = parsed.deck;
     const originalCards: Card[] = parsed.cards;
-    const newDeckId = crypto.randomUUID();
+    const newDeckId = generateUUID();
 
     await db.decks.add({
       id: newDeckId,
@@ -335,7 +416,7 @@ export async function importData(
     decksImported++;
 
     const cardsToInsert: Card[] = originalCards.map((c) => ({
-      id: crypto.randomUUID(),
+      id: generateUUID(),
       deckId: newDeckId,
       front: c.front,
       back: c.back,
@@ -361,7 +442,7 @@ export async function importData(
 
     for (const d of parsed.decks as Deck[]) {
       const oldId = String(d.id);
-      const newDeckId = mode === 'replace' && d.id ? d.id : crypto.randomUUID();
+      const newDeckId = mode === 'replace' && d.id ? String(d.id) : generateUUID();
 
       await db.decks.put({
         id: newDeckId,
@@ -383,7 +464,7 @@ export async function importData(
       const mappedDeckId = deckIdMap.get(String(c.deckId));
       if (mappedDeckId !== undefined) {
         cardsToInsert.push({
-          id: mode === 'replace' && c.id ? c.id : crypto.randomUUID(),
+          id: mode === 'replace' && c.id ? String(c.id) : generateUUID(),
           deckId: mappedDeckId,
           front: c.front,
           back: c.back,

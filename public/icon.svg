@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <defs>
+    <linearGradient id="bg-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#059669" />
+      <stop offset="50%" stop-color="#10b981" />
+      <stop offset="100%" stop-color="#34d399" />
+    </linearGradient>
+    <linearGradient id="card-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="100%" stop-color="#f8fafc" />
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#064e3b" flood-opacity="0.3" />
+    </filter>
+  </defs>
+
+  <!-- Background App Tile -->
+  <rect width="512" height="512" rx="112" fill="url(#bg-grad)" />
+
+  <!-- Back Card Stack -->
+  <rect x="156" y="116" width="220" height="270" rx="28" fill="#a7f3d0" opacity="0.6" transform="rotate(8 266 251)" />
+
+  <!-- Middle Card Stack -->
+  <rect x="146" y="126" width="220" height="270" rx="28" fill="#d1fae5" opacity="0.8" transform="rotate(-5 256 261)" />
+
+  <!-- Front Foreground Card -->
+  <g filter="url(#shadow)">
+    <rect x="146" y="136" width="220" height="270" rx="28" fill="url(#card-grad)" />
+    <!-- Horizontal Card Lines / Content Representation -->
+    <rect x="186" y="196" width="140" height="18" rx="9" fill="#059669" />
+    <rect x="186" y="234" width="90" height="12" rx="6" fill="#94a3b8" />
+    <rect x="186" y="260" width="110" height="12" rx="6" fill="#cbd5e1" />
+    
+    <!-- Accent Star / Mastery Sparkle -->
+    <path d="M256 312 L260 326 L274 330 L260 334 L256 348 L252 334 L238 330 L252 326 Z" fill="#10b981" />
+  </g>
+</svg>

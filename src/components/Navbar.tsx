@@ -1,11 +1,14 @@
 import React from 'react';
-import { Layers, Moon, Sun, Download } from 'lucide-react';
+import { Layers, Moon, Sun, Download, Cloud, CloudOff, RefreshCw, User as UserIcon } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 
 interface NavbarProps {
   darkMode: boolean;
   onToggleDarkMode: () => void;
   onOpenBackupModal: () => void;
   onNavigateHome: () => void;
+  onNavigateProfile: () => void;
+  onOpenAuthModal: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -13,9 +16,13 @@ export const Navbar: React.FC<NavbarProps> = ({
   onToggleDarkMode,
   onOpenBackupModal,
   onNavigateHome,
+  onNavigateProfile,
+  onOpenAuthModal,
 }) => {
+  const { user, syncStatus } = useAuth();
+
   return (
-    <header className="sticky top-0 z-30 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 transition-colors">
+    <header className="sticky top-0 z-30 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 transition-colors pt-safe">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         {/* Brand */}
         <button
@@ -42,20 +49,50 @@ export const Navbar: React.FC<NavbarProps> = ({
 
         {/* Right Actions */}
         <div className="flex items-center gap-2">
+          {/* Cloud Sync / Profile Button */}
+          {user ? (
+            <button
+              onClick={onNavigateProfile}
+              className="flex items-center gap-1.5 px-3 py-2 text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors border border-slate-200/80 dark:border-slate-700/80"
+              title="Account & Cloud Sync"
+            >
+              {syncStatus === 'syncing' ? (
+                <RefreshCw className="w-4 h-4 text-brand-500 animate-spin" />
+              ) : syncStatus === 'synced' ? (
+                <Cloud className="w-4 h-4 text-emerald-500" />
+              ) : syncStatus === 'offline' ? (
+                <CloudOff className="w-4 h-4 text-amber-500" />
+              ) : (
+                <Cloud className="w-4 h-4 text-slate-400" />
+              )}
+              <span className="hidden sm:inline font-medium">
+                {user.email?.split('@')[0]}
+              </span>
+            </button>
+          ) : (
+            <button
+              onClick={onOpenAuthModal}
+              className="hidden sm:flex items-center gap-1.5 px-3 py-2 text-xs sm:text-sm font-semibold text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-950/50 hover:bg-brand-100 dark:hover:bg-brand-900/60 rounded-xl transition-colors border border-brand-200 dark:border-brand-800"
+            >
+              <UserIcon className="w-4 h-4" />
+              <span>Sign In / Sync</span>
+            </button>
+          )}
+
           {/* Backup / Export / Import */}
           <button
             onClick={onOpenBackupModal}
-            className="flex items-center gap-1.5 px-3 py-2 text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors border border-slate-200/80 dark:border-slate-700/80"
-            title="Backup & Restore Data"
+            className="flex items-center gap-1.5 px-3 py-2 text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors border border-slate-200/80 dark:border-slate-700/80"
+            title="Local JSON Backup & Restore"
           >
             <Download className="w-4 h-4 text-slate-500 dark:text-slate-400" />
-            <span className="hidden sm:inline">Backup / Restore</span>
+            <span className="hidden md:inline">Backup</span>
           </button>
 
           {/* Theme Toggle */}
           <button
             onClick={onToggleDarkMode}
-            className="p-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors border border-slate-200/80 dark:border-slate-700/80"
+            className="p-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors border border-slate-200/80 dark:border-slate-700/80"
             title={darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
             aria-label="Toggle Theme"
           >
