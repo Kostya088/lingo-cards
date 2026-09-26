@@ -9,8 +9,8 @@ interface DeckListProps {
   onStartStudy: (deck: DeckWithStats) => void;
   onOpenCreateModal: () => void;
   onEditDeck: (deck: DeckWithStats) => void;
-  onDeleteDeck: (deckId: number) => void;
-  onExportDeck: (deckId: number) => void;
+  onDeleteDeck: (deckId: string) => void;
+  onExportDeck: (deckId: string) => void;
 }
 
 export const DeckList: React.FC<DeckListProps> = ({

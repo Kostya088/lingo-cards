@@ -53,7 +53,7 @@ export const App: React.FC = () => {
   // App Navigation & Selected Data State
   const [view, setView] = useState<ViewMode>('deck-list');
   const [decks, setDecks] = useState<DeckWithStats[]>([]);
-  const [selectedDeckId, setSelectedDeckId] = useState<number | null>(null);
+  const [selectedDeckId, setSelectedDeckId] = useState<string | null>(null);
   const [cards, setCards] = useState<Card[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -85,7 +85,7 @@ export const App: React.FC = () => {
   }, []);
 
   // Load Cards for currently selected deck
-  const loadCards = useCallback(async (deckId: number) => {
+  const loadCards = useCallback(async (deckId: string) => {
     try {
       const data = await getDeckCards(deckId);
       setCards(data);
@@ -132,7 +132,7 @@ export const App: React.FC = () => {
     await loadDecks();
   };
 
-  const handleDeleteDeck = async (deckId: number) => {
+  const handleDeleteDeck = async (deckId: string) => {
     await deleteDeck(deckId);
     if (selectedDeckId === deckId) {
       setSelectedDeckId(null);
@@ -141,7 +141,7 @@ export const App: React.FC = () => {
     await loadDecks();
   };
 
-  const handleExportSingleDeck = async (deckId: number) => {
+  const handleExportSingleDeck = async (deckId: string) => {
     try {
       const json = await exportDeckData(deckId);
       const deck = decks.find((d) => d.id === deckId);
@@ -179,7 +179,7 @@ export const App: React.FC = () => {
     await loadDecks();
   };
 
-  const handleDeleteCard = async (cardId: number) => {
+  const handleDeleteCard = async (cardId: string) => {
     if (!confirm('Are you sure you want to delete this flashcard?')) return;
     await deleteCard(cardId);
     if (selectedDeckId) {

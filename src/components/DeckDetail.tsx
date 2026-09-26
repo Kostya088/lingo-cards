@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo } from "react";
 import {
   ArrowLeft,
   Play,
@@ -12,8 +12,8 @@ import {
   Clock,
   BookOpen,
   Calendar,
-} from 'lucide-react';
-import { type DeckWithStats, type Card, type MasteryLevel } from '../types';
+} from "lucide-react";
+import { type DeckWithStats, type Card, type MasteryLevel } from "../types";
 
 interface DeckDetailProps {
   deck: DeckWithStats;
@@ -23,15 +23,34 @@ interface DeckDetailProps {
   onAddCard: () => void;
   onBulkAddCards: () => void;
   onEditCard: (card: Card) => void;
-  onDeleteCard: (cardId: number) => void;
-  onExportDeck: (deckId: number) => void;
+  onDeleteCard: (cardId: string) => void;
+  onExportDeck: (deckId: string) => void;
 }
 
-const LEVEL_LABELS: Record<MasteryLevel, { label: string; bg: string; text: string }> = {
-  0: { label: 'New', bg: 'bg-slate-100 dark:bg-slate-800', text: 'text-slate-600 dark:text-slate-400' },
-  1: { label: 'Learning', bg: 'bg-amber-50 dark:bg-amber-950/40', text: 'text-amber-600 dark:text-amber-400' },
-  2: { label: 'Review', bg: 'bg-blue-50 dark:bg-blue-950/40', text: 'text-blue-600 dark:text-blue-400' },
-  3: { label: 'Mastered', bg: 'bg-emerald-50 dark:bg-emerald-950/40', text: 'text-emerald-600 dark:text-emerald-400' },
+const LEVEL_LABELS: Record<
+  MasteryLevel,
+  { label: string; bg: string; text: string }
+> = {
+  0: {
+    label: "New",
+    bg: "bg-slate-100 dark:bg-slate-800",
+    text: "text-slate-600 dark:text-slate-400",
+  },
+  1: {
+    label: "Learning",
+    bg: "bg-amber-50 dark:bg-amber-950/40",
+    text: "text-amber-600 dark:text-amber-400",
+  },
+  2: {
+    label: "Review",
+    bg: "bg-blue-50 dark:bg-blue-950/40",
+    text: "text-blue-600 dark:text-blue-400",
+  },
+  3: {
+    label: "Mastered",
+    bg: "bg-emerald-50 dark:bg-emerald-950/40",
+    text: "text-emerald-600 dark:text-emerald-400",
+  },
 };
 
 export const DeckDetail: React.FC<DeckDetailProps> = ({
@@ -45,15 +64,17 @@ export const DeckDetail: React.FC<DeckDetailProps> = ({
   onDeleteCard,
   onExportDeck,
 }) => {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedLevelFilter, setSelectedLevelFilter] = useState<'all' | MasteryLevel>('all');
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedLevelFilter, setSelectedLevelFilter] = useState<
+    "all" | MasteryLevel
+  >("all");
 
   const now = Date.now();
 
   const filteredCards = useMemo(() => {
     return cards.filter((card) => {
       // Level filter
-      if (selectedLevelFilter !== 'all' && card.level !== selectedLevelFilter) {
+      if (selectedLevelFilter !== "all" && card.level !== selectedLevelFilter) {
         return false;
       }
       // Search filter
@@ -68,10 +89,22 @@ export const DeckDetail: React.FC<DeckDetailProps> = ({
     });
   }, [cards, searchQuery, selectedLevelFilter]);
 
-  const dueCount = useMemo(() => cards.filter((c) => c.nextReviewDate <= now).length, [cards, now]);
-  const masteredCount = useMemo(() => cards.filter((c) => c.level === 3).length, [cards]);
-  const learningCount = useMemo(() => cards.filter((c) => c.level === 1 || c.level === 2).length, [cards]);
-  const newCount = useMemo(() => cards.filter((c) => c.level === 0).length, [cards]);
+  const dueCount = useMemo(
+    () => cards.filter((c) => c.nextReviewDate <= now).length,
+    [cards, now],
+  );
+  const masteredCount = useMemo(
+    () => cards.filter((c) => c.level === 3).length,
+    [cards],
+  );
+  const learningCount = useMemo(
+    () => cards.filter((c) => c.level === 1 || c.level === 2).length,
+    [cards],
+  );
+  const newCount = useMemo(
+    () => cards.filter((c) => c.level === 0).length,
+    [cards],
+  );
 
   return (
     <div className="space-y-6 animate-fade-in">
@@ -146,8 +179,12 @@ export const DeckDetail: React.FC<DeckDetailProps> = ({
               <BookOpen className="w-4 h-4" />
             </div>
             <div>
-              <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Total</p>
-              <p className="text-sm font-bold text-slate-900 dark:text-white">{cards.length} cards</p>
+              <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
+                Total
+              </p>
+              <p className="text-sm font-bold text-slate-900 dark:text-white">
+                {cards.length} cards
+              </p>
             </div>
           </div>
 
@@ -156,8 +193,12 @@ export const DeckDetail: React.FC<DeckDetailProps> = ({
               <CheckCircle2 className="w-4 h-4" />
             </div>
             <div>
-              <p className="text-[10px] uppercase font-bold text-emerald-600 dark:text-emerald-400 tracking-wider">Mastered</p>
-              <p className="text-sm font-bold text-emerald-700 dark:text-emerald-300">{masteredCount}</p>
+              <p className="text-[10px] uppercase font-bold text-emerald-600 dark:text-emerald-400 tracking-wider">
+                Mastered
+              </p>
+              <p className="text-sm font-bold text-emerald-700 dark:text-emerald-300">
+                {masteredCount}
+              </p>
             </div>
           </div>
 
@@ -166,8 +207,12 @@ export const DeckDetail: React.FC<DeckDetailProps> = ({
               <Clock className="w-4 h-4" />
             </div>
             <div>
-              <p className="text-[10px] uppercase font-bold text-amber-600 dark:text-amber-400 tracking-wider">Due For Review</p>
-              <p className="text-sm font-bold text-amber-700 dark:text-amber-300">{dueCount}</p>
+              <p className="text-[10px] uppercase font-bold text-amber-600 dark:text-amber-400 tracking-wider">
+                Due For Review
+              </p>
+              <p className="text-sm font-bold text-amber-700 dark:text-amber-300">
+                {dueCount}
+              </p>
             </div>
           </div>
 
@@ -176,8 +221,12 @@ export const DeckDetail: React.FC<DeckDetailProps> = ({
               <Calendar className="w-4 h-4" />
             </div>
             <div>
-              <p className="text-[10px] uppercase font-bold text-blue-600 dark:text-blue-400 tracking-wider">Learning / New</p>
-              <p className="text-sm font-bold text-blue-700 dark:text-blue-300">{learningCount + newCount}</p>
+              <p className="text-[10px] uppercase font-bold text-blue-600 dark:text-blue-400 tracking-wider">
+                Learning / New
+              </p>
+              <p className="text-sm font-bold text-blue-700 dark:text-blue-300">
+                {learningCount + newCount}
+              </p>
             </div>
           </div>
         </div>
@@ -189,25 +238,25 @@ export const DeckDetail: React.FC<DeckDetailProps> = ({
         <div className="p-4 border-b border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-slate-50/50 dark:bg-slate-800/30">
           {/* Level Filter Tabs */}
           <div className="flex items-center gap-1 overflow-x-auto pb-1 sm:pb-0 text-xs">
-            {(['all', 0, 1, 2, 3] as const).map((lvl) => (
+            {(["all", 0, 1, 2, 3] as const).map((lvl) => (
               <button
                 key={String(lvl)}
                 onClick={() => setSelectedLevelFilter(lvl as any)}
                 className={`px-3 py-1.5 rounded-lg font-medium whitespace-nowrap transition-all ${
                   selectedLevelFilter === lvl
-                    ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900 shadow-sm'
-                    : 'text-slate-600 dark:text-slate-400 hover:bg-slate-200/60 dark:hover:bg-slate-800'
+                    ? "bg-slate-900 dark:bg-white text-white dark:text-slate-900 shadow-sm"
+                    : "text-slate-600 dark:text-slate-400 hover:bg-slate-200/60 dark:hover:bg-slate-800"
                 }`}
               >
-                {lvl === 'all'
+                {lvl === "all"
                   ? `All (${cards.length})`
                   : lvl === 0
-                  ? `New (${newCount})`
-                  : lvl === 1
-                  ? `Learning`
-                  : lvl === 2
-                  ? `Review`
-                  : `Mastered (${masteredCount})`}
+                    ? `New (${newCount})`
+                    : lvl === 1
+                      ? `Learning`
+                      : lvl === 2
+                        ? `Review`
+                        : `Mastered (${masteredCount})`}
               </button>
             ))}
           </div>
@@ -232,9 +281,12 @@ export const DeckDetail: React.FC<DeckDetailProps> = ({
               <BookOpen className="w-6 h-6" />
             </div>
             <div className="space-y-1">
-              <h3 className="text-sm font-bold text-slate-900 dark:text-white">No flashcards in this deck yet</h3>
+              <h3 className="text-sm font-bold text-slate-900 dark:text-white">
+                No flashcards in this deck yet
+              </h3>
               <p className="text-xs text-slate-500 dark:text-slate-400 max-w-sm mx-auto">
-                Add vocabulary words one by one or paste a list with Quick Bulk Add.
+                Add vocabulary words one by one or paste a list with Quick Bulk
+                Add.
               </p>
             </div>
             <div className="flex items-center justify-center gap-2 pt-2">
@@ -273,7 +325,9 @@ export const DeckDetail: React.FC<DeckDetailProps> = ({
                       <span className="font-bold text-sm text-slate-900 dark:text-white">
                         {card.front}
                       </span>
-                      <span className="text-xs text-slate-400 font-normal">&rarr;</span>
+                      <span className="text-xs text-slate-400 font-normal">
+                        &rarr;
+                      </span>
                       <span className="text-xs font-medium text-slate-600 dark:text-slate-300">
                         {card.back}
                       </span>
@@ -288,7 +342,9 @@ export const DeckDetail: React.FC<DeckDetailProps> = ({
 
                   {/* Middle: Badges */}
                   <div className="flex items-center gap-2 shrink-0">
-                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${lvlInfo.bg} ${lvlInfo.text}`}>
+                    <span
+                      className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${lvlInfo.bg} ${lvlInfo.text}`}
+                    >
                       {lvlInfo.label}
                     </span>
                     {isDue && (

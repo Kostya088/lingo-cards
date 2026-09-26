@@ -7,8 +7,8 @@ interface DeckCardProps {
   onSelect: (deck: DeckWithStats) => void;
   onStartStudy: (deck: DeckWithStats) => void;
   onEdit: (deck: DeckWithStats) => void;
-  onDelete: (deckId: number) => void;
-  onExport: (deckId: number) => void;
+  onDelete: (deckId: string) => void;
+  onExport: (deckId: string) => void;
 }
 
 const COLOR_MAP: Record<string, { bg: string; text: string; lightBg: string; border: string }> = {

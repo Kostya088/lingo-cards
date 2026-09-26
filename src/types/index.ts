@@ -5,7 +5,8 @@ export type MasteryLevel = 0 | 1 | 2 | 3;
 // 3: Mastered (Consistent Good / High interval)
 
 export interface Deck {
-  id?: number;
+  id: string; // UUID string
+  userId?: string;
   title: string;
   description?: string;
   targetLanguage: string; // e.g. "Italian", "French", "German"
@@ -13,12 +14,14 @@ export interface Deck {
   color: string; // e.g. "emerald", "blue", "indigo", "rose", "amber", "purple"
   createdAt: number;
   updatedAt: number;
+  isDeleted?: boolean;
 }
 
 export interface Card {
-  id?: number;
-  deckId: number;
-  front: string; // Target language word / phrase (or front of card)
+  id: string; // UUID string
+  deckId: string; // UUID string of parent deck
+  userId?: string;
+  front: string; // Target language word / phrase
   back: string; // Translation / Meaning
   notes?: string; // Optional context, example sentence, pronunciation tip
   level: MasteryLevel;
@@ -29,6 +32,8 @@ export interface Card {
   lastReviewedDate?: number; // timestamp in ms
   totalReviews: number;
   createdAt: number;
+  updatedAt: number;
+  isDeleted?: boolean;
 }
 
 export type Rating = 'bad' | 'medium' | 'good';
@@ -73,4 +78,12 @@ export interface DeckWithStats extends Deck {
   reviewCount: number;
   masteredCount: number;
   dueCount: number;
+}
+
+export type SyncStatus = 'synced' | 'syncing' | 'offline' | 'error' | 'unauthenticated';
+
+export interface UserProfile {
+  id: string;
+  email: string;
+  createdAt: string;
 }

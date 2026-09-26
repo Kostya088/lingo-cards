@@ -59,7 +59,7 @@ export const StudySession: React.FC<StudySessionProps> = ({
   const [goodCount, setGoodCount] = useState(0);
   const [requeuedCount, setRequeuedCount] = useState(0);
   const [newMasteredCount, setNewMasteredCount] = useState(0);
-  const [uniqueCardsStudied, setUniqueCardsStudied] = useState<Set<number>>(new Set());
+  const [uniqueCardsStudied, setUniqueCardsStudied] = useState<Set<string>>(new Set());
 
   // Filter eligible cards
   const eligibleCards = useMemo(() => {
