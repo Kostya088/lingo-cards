@@ -72,34 +72,48 @@ export const DeckList: React.FC<DeckListProps> = ({
 
         {/* Global Stats bar */}
         {decks.length > 0 && (
-          <div className="grid grid-cols-3 gap-3 sm:gap-4 mt-6 pt-6 border-t border-slate-700/60">
-            <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-slate-800 flex items-center justify-center text-slate-300">
-                <BookOpen className="w-4 h-4" />
+          <div className="mt-6 pt-6 border-t border-slate-700/60">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2.5 sm:gap-6 sm:px-6 md:px-12 lg:px-20 max-w-3xl mx-auto">
+              {/* Total Cards */}
+              <div className="flex items-center justify-between sm:justify-start gap-3 p-2.5 sm:p-0 rounded-2xl bg-slate-800/40 sm:bg-transparent border border-slate-700/40 sm:border-0">
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-xl bg-slate-800 flex items-center justify-center text-slate-300 shrink-0">
+                    <BookOpen className="w-4 h-4 shrink-0" />
+                  </div>
+                  <div>
+                    <p className="text-[11px] font-medium text-slate-400 uppercase tracking-wider">Total Cards</p>
+                    <p className="text-base sm:text-lg font-bold text-white hidden sm:block">{totalCards}</p>
+                  </div>
+                </div>
+                <p className="text-base font-bold text-white sm:hidden pr-1">{totalCards}</p>
               </div>
-              <div>
-                <p className="text-[11px] font-medium text-slate-400 uppercase tracking-wider">Total Cards</p>
-                <p className="text-base sm:text-lg font-bold text-white">{totalCards}</p>
-              </div>
-            </div>
 
-            <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-emerald-950/60 border border-emerald-800/50 flex items-center justify-center text-emerald-400">
-                <CheckCircle2 className="w-4 h-4" />
+              {/* Mastered */}
+              <div className="flex items-center justify-between sm:justify-start gap-3 p-2.5 sm:p-0 rounded-2xl bg-slate-800/40 sm:bg-transparent border border-slate-700/40 sm:border-0">
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-xl bg-emerald-950/60 border border-emerald-800/50 flex items-center justify-center text-emerald-400 shrink-0">
+                    <CheckCircle2 className="w-4 h-4 shrink-0" />
+                  </div>
+                  <div>
+                    <p className="text-[11px] font-medium text-emerald-300/80 uppercase tracking-wider">Mastered</p>
+                    <p className="text-base sm:text-lg font-bold text-emerald-400 hidden sm:block">{totalMastered}</p>
+                  </div>
+                </div>
+                <p className="text-base font-bold text-emerald-400 sm:hidden pr-1">{totalMastered}</p>
               </div>
-              <div>
-                <p className="text-[11px] font-medium text-emerald-300/80 uppercase tracking-wider">Mastered</p>
-                <p className="text-base sm:text-lg font-bold text-emerald-400">{totalMastered}</p>
-              </div>
-            </div>
 
-            <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-amber-950/60 border border-amber-800/50 flex items-center justify-center text-amber-400">
-                <Clock className="w-4 h-4" />
-              </div>
-              <div>
-                <p className="text-[11px] font-medium text-amber-300/80 uppercase tracking-wider">Due For Review</p>
-                <p className="text-base sm:text-lg font-bold text-amber-400">{totalDue}</p>
+              {/* Due For Review */}
+              <div className="flex items-center justify-between sm:justify-start gap-3 p-2.5 sm:p-0 rounded-2xl bg-slate-800/40 sm:bg-transparent border border-slate-700/40 sm:border-0">
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-xl bg-amber-950/60 border border-amber-800/50 flex items-center justify-center text-amber-400 shrink-0">
+                    <Clock className="w-4 h-4 shrink-0" />
+                  </div>
+                  <div>
+                    <p className="text-[11px] font-medium text-amber-300/80 uppercase tracking-wider">Due For Review</p>
+                    <p className="text-base sm:text-lg font-bold text-amber-400 hidden sm:block">{totalDue}</p>
+                  </div>
+                </div>
+                <p className="text-base font-bold text-amber-400 sm:hidden pr-1">{totalDue}</p>
               </div>
             </div>
           </div>

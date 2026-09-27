@@ -492,45 +492,45 @@ export const StudySession: React.FC<StudySessionProps> = ({
         </div>
       </div>
 
-      {/* 3D Flashcard Container - zero scroll mobile height */}
-      <div className="flip-card-container w-full min-h-[260px] h-[46vh] max-h-[420px]">
+      {/* 3D Flashcard Container */}
+      <div className="flip-card-container w-full min-h-[320px] sm:min-h-[380px] h-[48vh] max-h-[480px]">
         <div
           onClick={handleFlip}
-          className={`flip-card-inner cursor-pointer select-none touch-manipulation ${
+          className={`flip-card-inner h-full w-full cursor-pointer select-none touch-manipulation ${
             isFlipped ? 'is-flipped' : ''
           }`}
         >
           {/* FRONT OF CARD */}
-          <div className="flip-card-front bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xl p-8 sm:p-10 flex flex-col justify-between">
+          <div className="flip-card-front bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xl p-5 sm:p-8 flex flex-col justify-between overflow-hidden">
             {/* Top info */}
             <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 font-medium">
               <span className="uppercase tracking-wider text-[11px] font-bold px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700">
                 {frontLangLabel}
               </span>
               <span className="text-[11px] bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 px-2 py-0.5 rounded-md border border-slate-200 dark:border-slate-700">
-                Click or Space to flip
+                Tap or Space to flip
               </span>
             </div>
 
             {/* Center: Foreign Word */}
-            <div className="text-center my-auto space-y-4">
-              <h2 className="text-3xl sm:text-4xl font-heading font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight">
+            <div className="text-center my-auto space-y-3 py-2">
+              <h2 className="text-2xl sm:text-4xl font-heading font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight break-words max-w-full px-2">
                 {frontText}
               </h2>
-              <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 text-xs font-semibold">
-                <span>🗣️ Speak translation aloud before flipping</span>
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 text-xs font-semibold">
+                <span>🗣️ Speak translation aloud</span>
               </div>
             </div>
 
             {/* Bottom prompt */}
             <div className="flex items-center justify-center gap-2 text-xs text-slate-400">
               <RotateCw className="w-3.5 h-3.5" />
-              <span>Click card or press <kbd className="px-1.5 py-0.5 text-[10px] font-bold bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded text-slate-700 dark:text-slate-300">Space</kbd> to reveal</span>
+              <span>Tap card to reveal answer</span>
             </div>
           </div>
 
           {/* BACK OF CARD */}
-          <div className="flip-card-back bg-white dark:bg-slate-900 border-2 border-slate-300 dark:border-slate-700 shadow-xl p-8 sm:p-10 flex flex-col justify-between">
+          <div className="flip-card-back bg-white dark:bg-slate-900 border-2 border-slate-300 dark:border-slate-700 shadow-xl p-5 sm:p-8 flex flex-col justify-between overflow-hidden">
             {/* Top info */}
             <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 font-medium">
               <span className="uppercase tracking-wider text-[11px] font-bold px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700">
@@ -542,15 +542,15 @@ export const StudySession: React.FC<StudySessionProps> = ({
             </div>
 
             {/* Center: Translation + Notes */}
-            <div className="text-center my-auto space-y-3">
+            <div className="text-center my-auto space-y-2 py-2">
               <div className="text-xs text-slate-400 font-medium line-through">
                 {direction === 'front-to-back' ? activeBackCard?.front : activeBackCard?.back}
               </div>
-              <h2 className="text-3xl sm:text-4xl font-heading font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight">
+              <h2 className="text-2xl sm:text-4xl font-heading font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight break-words max-w-full px-2">
                 {backText}
               </h2>
               {backNotes && (
-                <p className="text-sm text-slate-500 dark:text-slate-400 italic max-w-md mx-auto">
+                <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 italic max-w-md mx-auto line-clamp-3">
                   &ldquo;{backNotes}&rdquo;
                 </p>
               )}
@@ -558,68 +558,68 @@ export const StudySession: React.FC<StudySessionProps> = ({
 
             {/* Bottom info */}
             <div className="text-center text-xs text-slate-400">
-              Rate how well you recalled this word below
+              Rate your recall below
             </div>
           </div>
         </div>
       </div>
 
       {/* Action Controls */}
-      <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-4 shadow-sm">
+      <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-3 sm:p-4 shadow-sm">
         {!isFlipped ? (
           <button
             onClick={handleFlip}
-            className="w-full py-3.5 rounded-xl bg-slate-900 hover:bg-slate-800 dark:bg-brand-600 dark:hover:bg-brand-500 text-white font-bold text-sm shadow-md transition-all flex items-center justify-center gap-2"
+            className="w-full py-3.5 rounded-xl bg-slate-900 hover:bg-slate-800 dark:bg-brand-600 dark:hover:bg-brand-500 text-white font-bold text-sm shadow-md transition-all active:scale-[0.99] touch-manipulation flex items-center justify-center gap-2"
           >
             <RotateCw className="w-4 h-4" />
-            Turn Over Card <span className="text-xs opacity-75 font-normal">(Space)</span>
+            Turn Over Card <span className="hidden sm:inline text-xs opacity-75 font-normal">(Space)</span>
           </button>
         ) : (
-          <div className="space-y-3 animate-fade-in">
+          <div className="space-y-2.5 animate-fade-in">
             <p className="text-xs font-semibold text-center text-slate-500 dark:text-slate-400">
               How was your spoken recall?
             </p>
 
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-3 gap-2 sm:gap-3">
               {/* BAD (1) */}
               <button
                 onClick={() => handleRate('bad')}
-                className="py-3 px-2 rounded-xl bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/40 dark:hover:bg-rose-900/60 border border-rose-200 dark:border-rose-800 text-rose-700 dark:text-rose-300 text-center transition-all group"
+                className="py-2.5 sm:py-3 px-1.5 sm:px-2 rounded-xl bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/40 dark:hover:bg-rose-900/60 border border-rose-200 dark:border-rose-800 text-rose-700 dark:text-rose-300 text-center transition-all active:scale-95 touch-manipulation group"
               >
-                <div className="flex items-center justify-center gap-1.5 font-bold text-sm">
-                  <XCircle className="w-4 h-4 text-rose-500" />
+                <div className="flex items-center justify-center gap-1 sm:gap-1.5 font-bold text-sm">
+                  <XCircle className="w-4 h-4 text-rose-500 shrink-0" />
                   <span>Bad</span>
                 </div>
-                <p className="text-[10px] text-rose-600/80 dark:text-rose-400/80 mt-0.5">
-                  Forgot / Re-queue <kbd className="font-mono font-bold">(1)</kbd>
+                <p className="text-[10px] text-rose-600/80 dark:text-rose-400/80 mt-0.5 truncate">
+                  Forgot <kbd className="hidden sm:inline font-mono font-bold">(1)</kbd>
                 </p>
               </button>
 
               {/* MEDIUM (2) */}
               <button
                 onClick={() => handleRate('medium')}
-                className="py-3 px-2 rounded-xl bg-amber-50 hover:bg-amber-100 dark:bg-amber-950/40 dark:hover:bg-amber-900/60 border border-amber-200 dark:border-amber-800 text-amber-700 dark:text-amber-300 text-center transition-all group"
+                className="py-2.5 sm:py-3 px-1.5 sm:px-2 rounded-xl bg-amber-50 hover:bg-amber-100 dark:bg-amber-950/40 dark:hover:bg-amber-900/60 border border-amber-200 dark:border-amber-800 text-amber-700 dark:text-amber-300 text-center transition-all active:scale-95 touch-manipulation group"
               >
-                <div className="flex items-center justify-center gap-1.5 font-bold text-sm">
-                  <HelpCircle className="w-4 h-4 text-amber-500" />
+                <div className="flex items-center justify-center gap-1 sm:gap-1.5 font-bold text-sm">
+                  <HelpCircle className="w-4 h-4 text-amber-500 shrink-0" />
                   <span>Medium</span>
                 </div>
-                <p className="text-[10px] text-amber-600/80 dark:text-amber-400/80 mt-0.5">
-                  Hesitated <kbd className="font-mono font-bold">(2)</kbd>
+                <p className="text-[10px] text-amber-600/80 dark:text-amber-400/80 mt-0.5 truncate">
+                  Hesitated <kbd className="hidden sm:inline font-mono font-bold">(2)</kbd>
                 </p>
               </button>
 
               {/* GOOD (3) */}
               <button
                 onClick={() => handleRate('good')}
-                className="py-3 px-2 rounded-xl bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/40 dark:hover:bg-emerald-900/60 border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300 text-center transition-all group"
+                className="py-2.5 sm:py-3 px-1.5 sm:px-2 rounded-xl bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/40 dark:hover:bg-emerald-900/60 border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300 text-center transition-all active:scale-95 touch-manipulation group"
               >
-                <div className="flex items-center justify-center gap-1.5 font-bold text-sm">
-                  <CheckCircle className="w-4 h-4 text-emerald-500" />
+                <div className="flex items-center justify-center gap-1 sm:gap-1.5 font-bold text-sm">
+                  <CheckCircle className="w-4 h-4 text-emerald-500 shrink-0" />
                   <span>Good</span>
                 </div>
-                <p className="text-[10px] text-emerald-600/80 dark:text-emerald-400/80 mt-0.5">
-                  Recalled well <kbd className="font-mono font-bold">(3)</kbd>
+                <p className="text-[10px] text-emerald-600/80 dark:text-emerald-400/80 mt-0.5 truncate">
+                  Recalled <kbd className="hidden sm:inline font-mono font-bold">(3)</kbd>
                 </p>
               </button>
             </div>
