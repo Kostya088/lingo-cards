@@ -1,30 +1,13 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
 import { DeckList } from '../components/DeckList';
-import { getAllDecksWithStats, deleteDeck, exportDeckAsText } from '../db';
-import { type DeckWithStats } from '../types';
+import { deleteDeck, exportDeckAsText } from '../db';
+import { useDecks } from '../hooks/useDecks';
 
 export const HomeScreen: React.FC = () => {
   const navigate = useNavigate();
-  const [decks, setDecks] = useState<DeckWithStats[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  const loadDecks = useCallback(async () => {
-    try {
-      setIsLoading(true);
-      const data = await getAllDecksWithStats();
-      setDecks(data);
-    } catch (err) {
-      console.error('Failed to load decks:', err);
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    loadDecks();
-  }, [loadDecks]);
+  const { decks, isLoading, refresh } = useDecks();
 
   const handleDeleteDeck = async (deckId: string) => {
     const deck = decks.find((d) => d.id === deckId);
@@ -35,7 +18,7 @@ export const HomeScreen: React.FC = () => {
 
     try {
       await deleteDeck(deckId);
-      await loadDecks();
+      await refresh();
     } catch (err) {
       console.error('Failed to delete deck:', err);
       alert('Failed to delete deck. Please try again.');

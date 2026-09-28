@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   ArrowLeft,
@@ -13,27 +13,13 @@ import {
   CheckCircle2,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import { getAllDecksWithStats } from '../db';
-import { type DeckWithStats } from '../types';
+import { useDecks } from '../hooks/useDecks';
 
 export const ProfileScreen: React.FC = () => {
   const navigate = useNavigate();
   const { user, syncStatus, lastSyncedAt, syncError, signOut, syncNow, isConfigured } = useAuth();
-  const [decks, setDecks] = useState<DeckWithStats[]>([]);
+  const { decks, refresh } = useDecks();
   const [isSyncingManual, setIsSyncingManual] = useState(false);
-
-  const loadData = useCallback(async () => {
-    try {
-      const data = await getAllDecksWithStats();
-      setDecks(data);
-    } catch (err) {
-      console.error('Failed to load profile decks:', err);
-    }
-  }, []);
-
-  useEffect(() => {
-    loadData();
-  }, [loadData]);
 
   const totalCards = decks.reduce((acc, d) => acc + d.totalCards, 0);
 
@@ -41,7 +27,7 @@ export const ProfileScreen: React.FC = () => {
     try {
       setIsSyncingManual(true);
       await syncNow();
-      await loadData();
+      await refresh();
     } finally {
       setIsSyncingManual(false);
     }
