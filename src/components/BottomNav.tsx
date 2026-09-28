@@ -1,40 +1,76 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Layers, Clock, User as UserIcon, RefreshCw } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import { type DeckWithStats } from '../types';
+import { getAllDecksWithStats } from '../db/db';
 
 interface BottomNavProps {
-  currentView: 'deck-list' | 'deck-detail' | 'study-session' | 'session-summary' | 'profile';
-  decks: DeckWithStats[];
-  onNavigateHome: () => void;
-  onNavigateProfile: () => void;
-  onStartDueStudy: () => void;
+  hideBottomNav?: boolean;
 }
 
-export const BottomNav: React.FC<BottomNavProps> = ({
-  currentView,
-  decks,
-  onNavigateHome,
-  onNavigateProfile,
-  onStartDueStudy,
-}) => {
+export const BottomNav: React.FC<BottomNavProps> = ({ hideBottomNav }) => {
   const { user, syncStatus } = useAuth();
+  const location = useLocation();
+  const navigate = useNavigate();
 
-  const totalDue = decks.reduce((acc, d) => acc + d.dueCount, 0);
+  const [totalDue, setTotalDue] = useState(0);
 
-  // Hide bottom nav during active full-screen study session to maximize focus
-  if (currentView === 'study-session') {
+  // Fetch due cards count on path change or mount
+  useEffect(() => {
+    let isMounted = true;
+    async function fetchDueCount() {
+      try {
+        const decks = await getAllDecksWithStats();
+        if (isMounted) {
+          const due = decks.reduce((acc, d) => acc + d.dueCount, 0);
+          setTotalDue(due);
+        }
+      } catch (e) {
+        console.error('Failed to get due count:', e);
+      }
+    }
+    fetchDueCount();
+    return () => {
+      isMounted = false;
+    };
+  }, [location.pathname]);
+
+  // Hide BottomNav if requested by child screen (e.g. during active study review)
+  if (hideBottomNav) {
     return null;
   }
+
+  const path = location.pathname;
+
+  // Hide BottomNav on editor and auth screens
+  const isEditorOrAuth =
+    path.startsWith('/decks/new') ||
+    path.includes('/edit') ||
+    path.includes('/cards/') ||
+    path.includes('/bulk-add') ||
+    path === '/auth';
+
+  if (isEditorOrAuth) {
+    return null;
+  }
+
+  const isDecksActive = path === '/' || /^\/deck\/[^/]+$/.test(path);
+  const isStudyActive = path === '/study/due' || path.endsWith('/study');
+  const isProfileActive = path === '/profile';
+
+  const handleStudyDueClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    navigate('/study/due');
+  };
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-40 md:hidden bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-t border-slate-200 dark:border-slate-800 shadow-lg pb-safe">
       <div className="grid grid-cols-3 h-16 max-w-lg mx-auto px-4 items-center">
         {/* Tab 1: Decks */}
-        <button
-          onClick={onNavigateHome}
+        <Link
+          to="/"
           className={`flex flex-col items-center justify-center gap-1 py-1 transition-colors ${
-            currentView === 'deck-list' || currentView === 'deck-detail'
+            isDecksActive
               ? 'text-brand-600 dark:text-brand-400 font-semibold'
               : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
           }`}
@@ -42,13 +78,13 @@ export const BottomNav: React.FC<BottomNavProps> = ({
         >
           <Layers className="w-5 h-5" />
           <span className="text-[11px] leading-tight">Decks</span>
-        </button>
+        </Link>
 
         {/* Tab 2: Study Due */}
         <button
-          onClick={onStartDueStudy}
+          onClick={handleStudyDueClick}
           className={`flex flex-col items-center justify-center gap-1 py-1 relative transition-colors ${
-            currentView === 'session-summary'
+            isStudyActive
               ? 'text-brand-600 dark:text-brand-400 font-semibold'
               : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
           }`}
@@ -66,10 +102,10 @@ export const BottomNav: React.FC<BottomNavProps> = ({
         </button>
 
         {/* Tab 3: Account / Profile */}
-        <button
-          onClick={onNavigateProfile}
+        <Link
+          to="/profile"
           className={`flex flex-col items-center justify-center gap-1 py-1 transition-colors ${
-            currentView === 'profile'
+            isProfileActive
               ? 'text-brand-600 dark:text-brand-400 font-semibold'
               : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
           }`}
@@ -93,7 +129,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({
           <span className="text-[11px] leading-tight">
             {user ? 'Account' : 'Profile'}
           </span>
-        </button>
+        </Link>
       </div>
     </nav>
   );

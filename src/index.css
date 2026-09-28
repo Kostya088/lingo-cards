@@ -28,6 +28,10 @@
   .pr-safe {
     padding-right: env(safe-area-inset-right, 0px);
   }
+  /* Notch, dynamic island, and status bar clearance */
+  .header-safe-top {
+    padding-top: max(1.25rem, calc(env(safe-area-inset-top, 0px) + 0.75rem));
+  }
 }
 
 /* 3D Flip Card System */

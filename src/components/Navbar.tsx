@@ -1,31 +1,39 @@
 import React from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { Layers, Moon, Sun, Cloud, CloudOff, RefreshCw, User as UserIcon } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 interface NavbarProps {
   darkMode: boolean;
   onToggleDarkMode: () => void;
-  onNavigateHome: () => void;
-  onNavigateProfile: () => void;
-  onOpenAuthModal: () => void;
-  onOpenBackupModal?: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
   darkMode,
   onToggleDarkMode,
-  onNavigateHome,
-  onNavigateProfile,
-  onOpenAuthModal,
 }) => {
   const { user, syncStatus } = useAuth();
+  const location = useLocation();
+
+  // Hide Navbar on mobile for focused sub-screens that provide their own native back headers
+  const isSubScreen =
+    location.pathname.startsWith('/decks/new') ||
+    location.pathname.includes('/edit') ||
+    location.pathname.includes('/cards/') ||
+    location.pathname.includes('/bulk-add') ||
+    location.pathname.includes('/study') ||
+    location.pathname === '/auth';
 
   return (
-    <header className="sticky top-0 z-30 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 transition-colors pt-safe">
+    <header
+      className={`sticky top-0 z-30 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 transition-colors pt-safe ${
+        isSubScreen ? 'hidden sm:block' : ''
+      }`}
+    >
       <div className="max-w-6xl mx-auto px-3 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         {/* Brand */}
-        <button
-          onClick={onNavigateHome}
+        <Link
+          to="/"
           className="flex items-center gap-2 group text-left focus:outline-none shrink-0"
         >
           <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-emerald-400 flex items-center justify-center text-white shadow-md shadow-brand-500/20 group-hover:scale-105 transition-transform shrink-0">
@@ -44,14 +52,14 @@ export const Navbar: React.FC<NavbarProps> = ({
               Speak, flip & master vocabulary
             </p>
           </div>
-        </button>
+        </Link>
 
         {/* Right Actions */}
         <div className="flex items-center gap-1.5 sm:gap-2">
           {/* Cloud Sync / Profile Button */}
           {user ? (
-            <button
-              onClick={onNavigateProfile}
+            <Link
+              to="/profile"
               className="flex items-center gap-1.5 px-2.5 py-1.5 sm:px-3 sm:py-2 text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors border border-slate-200/80 dark:border-slate-700/80"
               title="Account & Cloud Sync"
             >
@@ -67,15 +75,15 @@ export const Navbar: React.FC<NavbarProps> = ({
               <span className="hidden sm:inline font-medium">
                 {user.email?.split('@')[0]}
               </span>
-            </button>
+            </Link>
           ) : (
-            <button
-              onClick={onOpenAuthModal}
+            <Link
+              to="/auth"
               className="hidden sm:flex items-center gap-1.5 px-3 py-2 text-xs sm:text-sm font-semibold text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-950/50 hover:bg-brand-100 dark:hover:bg-brand-900/60 rounded-xl transition-colors border border-brand-200 dark:border-brand-800"
             >
               <UserIcon className="w-4 h-4" />
               <span>Sign In / Sync</span>
-            </button>
+            </Link>
           )}
 
           {/* Theme Toggle */}

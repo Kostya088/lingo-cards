@@ -493,3 +493,26 @@ export async function importData(
 
   return { decksImported, cardsImported };
 }
+
+// Fetch single deck with statistics directly for /deck/:deckId
+export async function getDeckById(deckId: string): Promise<DeckWithStats | null> {
+  const all = await getAllDecksWithStats();
+  return all.find((d) => d.id === deckId) || null;
+}
+
+// Fetch single card directly for /deck/:deckId/cards/:cardId/edit
+export async function getCardById(cardId: string): Promise<Card | null> {
+  await ensureLegacyDataMigrated();
+  return (await db.cards.get(cardId)) || null;
+}
+
+// Export deck as readable text list (front - back)
+export async function exportDeckAsText(deckId: string): Promise<string> {
+  const deck = await getDeckById(deckId);
+  const cards = await getDeckCards(deckId);
+  const header = `# ${deck?.title || 'Vocabulary'}\n# Format: Front - Back\n\n`;
+  const body = cards
+    .map((c) => `${c.front} - ${c.back}${c.notes ? ` // ${c.notes}` : ''}`)
+    .join('\n');
+  return header + body;
+}

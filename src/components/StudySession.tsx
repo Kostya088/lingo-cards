@@ -25,6 +25,7 @@ interface StudySessionProps {
   allCards: Card[];
   onExit: () => void;
   onSessionComplete: (stats: SessionStats, retryDifficultCards: () => void) => void;
+  onStateChange?: (isConfiguring: boolean) => void;
 }
 
 interface QueueItem {
@@ -38,9 +39,14 @@ export const StudySession: React.FC<StudySessionProps> = ({
   allCards,
   onExit,
   onSessionComplete,
+  onStateChange,
 }) => {
   // Setup phase vs active phase
   const [isConfiguring, setIsConfiguring] = useState(true);
+
+  useEffect(() => {
+    onStateChange?.(isConfiguring);
+  }, [isConfiguring, onStateChange]);
   const [direction, setDirection] = useState<StudyDirection>('front-to-back');
   const [filter, setFilter] = useState<StudyFilter>('needs-review');
   const [shuffle, setShuffle] = useState(true);

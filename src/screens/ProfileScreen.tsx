@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   ArrowLeft,
   CloudOff,
@@ -12,23 +13,27 @@ import {
   CheckCircle2,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { getAllDecksWithStats } from '../db/db';
 import { type DeckWithStats } from '../types';
 
-interface ProfileViewProps {
-  decks: DeckWithStats[];
-  onBack: () => void;
-  onOpenAuthModal: () => void;
-  onRefreshData: () => Promise<void>;
-}
-
-export const ProfileView: React.FC<ProfileViewProps> = ({
-  decks,
-  onBack,
-  onOpenAuthModal,
-  onRefreshData,
-}) => {
+export const ProfileScreen: React.FC = () => {
+  const navigate = useNavigate();
   const { user, syncStatus, lastSyncedAt, syncError, signOut, syncNow, isConfigured } = useAuth();
+  const [decks, setDecks] = useState<DeckWithStats[]>([]);
   const [isSyncingManual, setIsSyncingManual] = useState(false);
+
+  const loadData = useCallback(async () => {
+    try {
+      const data = await getAllDecksWithStats();
+      setDecks(data);
+    } catch (err) {
+      console.error('Failed to load profile decks:', err);
+    }
+  }, []);
+
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
 
   const totalCards = decks.reduce((acc, d) => acc + d.totalCards, 0);
 
@@ -36,7 +41,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
     try {
       setIsSyncingManual(true);
       await syncNow();
-      await onRefreshData();
+      await loadData();
     } finally {
       setIsSyncingManual(false);
     }
@@ -58,7 +63,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
       {/* Back Header */}
       <div className="flex items-center gap-3">
         <button
-          onClick={onBack}
+          onClick={() => navigate('/')}
           className="p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 shadow-sm transition-all"
           aria-label="Back to decks"
         >
@@ -214,9 +219,9 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
           </p>
           <div className="pt-2">
             <button
-              onClick={onOpenAuthModal}
+              onClick={() => navigate('/auth')}
               disabled={!isConfigured}
-              className="py-3 px-6 rounded-xl bg-brand-600 hover:bg-brand-500 text-white font-semibold shadow-lg shadow-brand-500/25 active:scale-95 transition-all"
+              className="py-3 px-6 rounded-xl bg-brand-600 hover:bg-brand-500 text-white font-semibold shadow-lg shadow-brand-500/25 active:scale-95 transition-all disabled:opacity-50"
             >
               Sign In or Create Account
             </button>
