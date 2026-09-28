@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
 import { DeckDetail } from '../components/DeckDetail';
-import { getDeckById, getDeckCards, deleteCard, exportDeckAsText } from '../db/db';
+import { getDeckById, getDeckCards, deleteCard, exportDeckAsText } from '../db';
 import { type DeckWithStats, type Card } from '../types';
 
 export const DeckDetailScreen: React.FC = () => {

@@ -3,7 +3,7 @@ import { useParams, useNavigate, useOutletContext } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
 import { StudySession } from '../components/StudySession';
 import { SessionSummary } from '../components/SessionSummary';
-import { getDeckById, getDeckCards, getAllDecksWithStats } from '../db/db';
+import { getDeckById, getDeckCards, getAllDecksWithStats } from '../db';
 import { type DeckWithStats, type Card, type SessionStats } from '../types';
 
 interface OutletContextType {

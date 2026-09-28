@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
 import { DeckList } from '../components/DeckList';
-import { getAllDecksWithStats, deleteDeck, exportDeckAsText } from '../db/db';
+import { getAllDecksWithStats, deleteDeck, exportDeckAsText } from '../db';
 import { type DeckWithStats } from '../types';
 
 export const HomeScreen: React.FC = () => {

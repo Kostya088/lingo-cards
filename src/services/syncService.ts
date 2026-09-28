@@ -9,7 +9,7 @@ import {
   bulkUpsertDecks,
   bulkUpsertCards,
   linkGuestDataToUser,
-} from '../db/db';
+} from '../db';
 
 export interface SyncResult {
   success: boolean;

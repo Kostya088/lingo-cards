@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Sparkles, Loader2 } from 'lucide-react';
-import { getDeckById, getCardById, createCard, updateCard } from '../db/db';
+import { getDeckById, getCardById, createCard, updateCard } from '../db';
 import { type DeckWithStats, type Card } from '../types';
 
 export const CardEditorScreen: React.FC = () => {

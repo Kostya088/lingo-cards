@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, CheckCircle, AlertCircle, FileText, Loader2 } from 'lucide-react';
-import { getDeckById, createCardsBulk } from '../db/db';
+import { getDeckById, createCardsBulk } from '../db';
 import { type DeckWithStats } from '../types';
 
 export const BulkAddScreen: React.FC = () => {

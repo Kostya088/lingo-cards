@@ -13,7 +13,7 @@ import {
   CheckCircle2,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import { getAllDecksWithStats } from '../db/db';
+import { getAllDecksWithStats } from '../db';
 import { type DeckWithStats } from '../types';
 
 export const ProfileScreen: React.FC = () => {

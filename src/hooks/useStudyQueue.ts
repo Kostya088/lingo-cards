@@ -8,7 +8,7 @@ import {
   type SessionStats,
 } from '../types';
 import { calculateNextReview } from '../lib/spacedRepetition';
-import { updateCard } from '../db/db';
+import { updateCard } from '../db';
 
 export interface QueueItem {
   card: Card;
