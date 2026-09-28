@@ -1,29 +1,17 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useLiveQuery } from 'dexie-react-hooks';
 import { getAllDecksWithStats } from '../db';
-import { type DeckWithStats } from '../types';
 
 export function useDecks() {
-  const [decks, setDecks] = useState<DeckWithStats[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
+  // useLiveQuery handles the subscription to Dexie and automatically 
+  // returns the fresh data whenever the database changes.
+  const decks = useLiveQuery(() => getAllDecksWithStats());
 
-  const refresh = useCallback(async () => {
-    try {
-      setIsLoading(true);
-      setError(null);
-      const data = await getAllDecksWithStats();
-      setDecks(data);
-    } catch (err) {
-      console.error('Failed to load decks:', err);
-      setError(err instanceof Error ? err : new Error('Unknown error loading decks'));
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    refresh();
-  }, [refresh]);
-
-  return { decks, isLoading, error, refresh };
+  return {
+    decks: decks ?? [],
+    isLoading: decks === undefined,
+    error: null,
+    // refresh is kept as a no-op so we don't break existing components 
+    // that call it after a manual mutation, though it's no longer necessary.
+    refresh: async () => {}, 
+  };
 }

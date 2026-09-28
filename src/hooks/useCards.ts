@@ -1,34 +1,16 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useLiveQuery } from 'dexie-react-hooks';
 import { getDeckCards } from '../db';
-import { type Card } from '../types';
 
 export function useCards(deckId: string | undefined) {
-  const [cards, setCards] = useState<Card[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
+  const cards = useLiveQuery(
+    () => (deckId ? getDeckCards(deckId) : Promise.resolve([])),
+    [deckId]
+  );
 
-  const refresh = useCallback(async () => {
-    if (!deckId) {
-      setIsLoading(false);
-      return;
-    }
-    
-    try {
-      setIsLoading(true);
-      setError(null);
-      const data = await getDeckCards(deckId);
-      setCards(data);
-    } catch (err) {
-      console.error(`Failed to load cards for deck ${deckId}:`, err);
-      setError(err instanceof Error ? err : new Error('Unknown error loading cards'));
-    } finally {
-      setIsLoading(false);
-    }
-  }, [deckId]);
-
-  useEffect(() => {
-    refresh();
-  }, [refresh]);
-
-  return { cards, isLoading, error, refresh };
+  return {
+    cards: cards ?? [],
+    isLoading: cards === undefined && !!deckId,
+    error: null,
+    refresh: async () => {}, 
+  };
 }

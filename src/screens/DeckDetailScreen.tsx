@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useLiveQuery } from 'dexie-react-hooks';
 import {
   Loader2,
   ArrowLeft,
@@ -15,42 +16,21 @@ import {
   Download,
 } from 'lucide-react';
 import { getDeckById, getDeckCards, deleteCard, exportDeckAsText } from '../db';
-import { type DeckWithStats, type Card, type MasteryLevel } from '../types';
+import { type MasteryLevel } from '../types';
 import { CardList } from '../components/CardList';
 
 export const DeckDetailScreen: React.FC = () => {
   const { deckId } = useParams<{ deckId: string }>();
   const navigate = useNavigate();
 
-  // Data State
-  const [deck, setDeck] = useState<DeckWithStats | null>(null);
-  const [cards, setCards] = useState<Card[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  // Reactive Data State
+  const deck = useLiveQuery(() => (deckId ? getDeckById(deckId) : undefined), [deckId]);
+  const cards = useLiveQuery(() => (deckId ? getDeckCards(deckId) : []), [deckId]) ?? [];
+  const isLoading = deck === undefined && !!deckId;
 
   // UI State
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedLevelFilter, setSelectedLevelFilter] = useState<'all' | MasteryLevel>('all');
-
-  const loadDeckAndCards = useCallback(async () => {
-    if (!deckId) return;
-    try {
-      setIsLoading(true);
-      const [currentDeck, currentCards] = await Promise.all([
-        getDeckById(deckId),
-        getDeckCards(deckId),
-      ]);
-      setDeck(currentDeck);
-      setCards(currentCards);
-    } catch (err) {
-      console.error('Failed to load deck data:', err);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [deckId]);
-
-  useEffect(() => {
-    loadDeckAndCards();
-  }, [loadDeckAndCards]);
 
   const handleDeleteCard = async (cardId: string) => {
     const confirmed = window.confirm('Are you sure you want to delete this flashcard?');
@@ -58,7 +38,6 @@ export const DeckDetailScreen: React.FC = () => {
 
     try {
       await deleteCard(cardId);
-      await loadDeckAndCards();
     } catch (err) {
       console.error('Failed to delete card:', err);
       alert('Failed to delete card. Please try again.');
