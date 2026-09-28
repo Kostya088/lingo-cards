@@ -16,6 +16,7 @@ import { BulkAddScreen } from './screens/BulkAddScreen';
 import { StudyScreen } from './screens/StudyScreen';
 import { ProfileScreen } from './screens/ProfileScreen';
 import { AuthScreen } from './screens/AuthScreen';
+import { ErrorBoundary } from './components/ErrorBoundary';
 
 export interface RootOutletContext {
   setHideBottomNav: (hide: boolean) => void;
@@ -68,7 +69,9 @@ const RootLayout: React.FC = () => {
           isBottomNavRoute ? 'pb-24 md:pb-6' : ''
         }`}
       >
-        <Outlet context={{ setHideBottomNav }} />
+        <ErrorBoundary>
+          <Outlet context={{ setHideBottomNav }} />
+        </ErrorBoundary>
       </main>
 
       <BottomNav hideBottomNav={hideBottomNav} />
