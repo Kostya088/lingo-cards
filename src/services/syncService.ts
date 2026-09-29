@@ -4,6 +4,7 @@ import {
   type Card,
 } from '../types';
 import {
+  db,
   getModifiedDecksSince,
   getModifiedCardsSince,
   bulkUpsertDecks,
@@ -135,9 +136,15 @@ export async function syncWithCloud(userId: string): Promise<SyncResult> {
   }
 
   const syncStartTime = Date.now();
-  const lastSyncTime = getLastSyncTime(userId);
+  let lastSyncTime = getLastSyncTime(userId);
 
   try {
+    // Smart Empty-State Detection: If local database is completely empty, force full download
+    const localDecksCount = await db.decks.count();
+    if (localDecksCount === 0) {
+      lastSyncTime = 0;
+    }
+
     // Step 1: Claim any guest decks and cards created prior to authentication
     await linkGuestDataToUser(userId);
 
@@ -168,12 +175,16 @@ export async function syncWithCloud(userId: string): Promise<SyncResult> {
     let downloadedDecks = 0;
     let downloadedCards = 0;
 
+    // Add a 1-hour safety buffer to account for PC vs Server clock drift
+    const CLOCK_DRIFT_BUFFER = 60 * 60 * 1000;
+    const safeSyncTime = Math.max(0, lastSyncTime - CLOCK_DRIFT_BUFFER);
+
     // Fetch remote decks updated since last sync
     const { data: remoteDecks, error: decksFetchError } = await supabase
       .from('decks')
       .select('*')
       .eq('user_id', userId)
-      .gt('updated_at', lastSyncTime);
+      .gt('updated_at', safeSyncTime);
 
     if (decksFetchError) {
       throw new Error(`Failed to download remote decks: ${decksFetchError.message}`);
@@ -190,7 +201,7 @@ export async function syncWithCloud(userId: string): Promise<SyncResult> {
       .from('cards')
       .select('*')
       .eq('user_id', userId)
-      .gt('updated_at', lastSyncTime);
+      .gt('updated_at', safeSyncTime);
 
     if (cardsFetchError) {
       throw new Error(`Failed to download remote cards: ${cardsFetchError.message}`);

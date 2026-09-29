@@ -3,6 +3,8 @@ import type { User, Session } from '@supabase/supabase-js';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
 import { type SyncStatus } from '../types';
 import { syncWithCloud, getLastSyncTime } from '../services/syncService';
+import { db } from '../db';
+import { useLiveQuery } from 'dexie-react-hooks';
 
 interface AuthContextType {
   user: User | null;
@@ -126,6 +128,39 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       window.removeEventListener('online', handleOnline);
       window.removeEventListener('offline', handleOffline);
     };
+  }, [user?.id, runSync]);
+
+  // 1. Debounced real-time sync on local database mutations
+  const latestLocalUpdate = useLiveQuery(async () => {
+    try {
+      const maxDeck = await db.decks.orderBy('updatedAt').last();
+      const maxCard = await db.cards.orderBy('updatedAt').last();
+      return Math.max(maxDeck?.updatedAt || 0, maxCard?.updatedAt || 0);
+    } catch {
+      return 0;
+    }
+  });
+
+  useEffect(() => {
+    if (!user?.id || !navigator.onLine || !latestLocalUpdate) return;
+    
+    const timeoutId = setTimeout(() => {
+      runSync(user.id);
+    }, 5000); // 5 second debounce after last edit
+    
+    return () => clearTimeout(timeoutId);
+  }, [latestLocalUpdate, user?.id, runSync]);
+
+  // 2. Instant push on app close / backgrounding
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'hidden' && user?.id) {
+        runSync(user.id);
+      }
+    };
+    
+    window.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => window.removeEventListener('visibilitychange', handleVisibilityChange);
   }, [user?.id, runSync]);
 
   // Sign In
