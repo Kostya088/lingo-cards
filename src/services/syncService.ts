@@ -214,7 +214,20 @@ export async function syncWithCloud(userId: string): Promise<SyncResult> {
     }
 
     // Step 4: Record successful sync completion timestamp
-    setLastSyncTime(userId, syncStartTime);
+    // We MUST use the maxServerTime to prevent the engine from thinking the newly downloaded server timestamps are local modifications!
+    let maxServerTime = syncStartTime;
+    if (remoteDecks) {
+      for (const d of remoteDecks) {
+        if (Number(d.updated_at) > maxServerTime) maxServerTime = Number(d.updated_at);
+      }
+    }
+    if (remoteCards) {
+      for (const c of remoteCards) {
+        if (Number(c.updated_at) > maxServerTime) maxServerTime = Number(c.updated_at);
+      }
+    }
+
+    setLastSyncTime(userId, maxServerTime);
 
     return {
       success: true,
@@ -222,7 +235,7 @@ export async function syncWithCloud(userId: string): Promise<SyncResult> {
       uploadedCards,
       downloadedDecks,
       downloadedCards,
-      timestamp: syncStartTime,
+      timestamp: maxServerTime,
     };
   } catch (err: any) {
     console.error('Cloud sync error:', err);
