@@ -3,31 +3,34 @@ import { Link, useLocation } from 'react-router-dom';
 import { Layers, Moon, Sun, Cloud, CloudOff, RefreshCw, User as UserIcon } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
-interface NavbarProps {
+interface HeaderProps {
   darkMode: boolean;
   onToggleDarkMode: () => void;
+  hideOnMobile?: boolean;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({
+export const Header: React.FC<HeaderProps> = ({
   darkMode,
   onToggleDarkMode,
+  hideOnMobile,
 }) => {
   const { user, syncStatus } = useAuth();
   const location = useLocation();
 
-  // Hide Navbar on mobile for focused sub-screens that provide their own native back headers
+  // Hide Header on mobile for focused sub-screens that provide their own native back headers
   const isSubScreen =
     location.pathname.startsWith('/decks/new') ||
     location.pathname.includes('/edit') ||
     location.pathname.includes('/cards/') ||
     location.pathname.includes('/bulk-add') ||
-    location.pathname.includes('/study') ||
     location.pathname === '/auth';
+
+  const shouldHide = isSubScreen || hideOnMobile;
 
   return (
     <header
       className={`sticky top-0 z-30 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 transition-colors pt-safe ${
-        isSubScreen ? 'hidden sm:block' : ''
+        shouldHide ? 'hidden sm:block' : ''
       }`}
     >
       <div className="max-w-6xl mx-auto px-3 sm:px-6 lg:px-8 h-16 flex items-center justify-between">

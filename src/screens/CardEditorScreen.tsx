@@ -87,8 +87,9 @@ export const CardEditorScreen: React.FC = () => {
       }
 
       navigate(`/deck/${deckId}`);
-    } catch (err: any) {
-      setError(err.message || 'Failed to save flashcard.');
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to save flashcard.';
+      setError(errorMessage);
     } finally {
       setIsSubmitting(false);
     }
@@ -147,13 +148,14 @@ export const CardEditorScreen: React.FC = () => {
 
           {/* Front Word */}
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5 flex items-center justify-between">
+            <label htmlFor="front-input" className="flex text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5 items-center justify-between">
               <span>Card Front ({targetLang}) *</span>
               <span className="text-[10px] text-brand-600 dark:text-brand-400 font-normal">
                 Prompt during review
               </span>
             </label>
             <input
+              id="front-input"
               type="text"
               required
               autoFocus
@@ -166,10 +168,11 @@ export const CardEditorScreen: React.FC = () => {
 
           {/* Back Translation */}
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">
+            <label htmlFor="back-input" className="block text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">
               Card Back ({nativeLang}) *
             </label>
             <input
+              id="back-input"
               type="text"
               required
               placeholder="e.g. good morning, the apple, please..."
@@ -181,11 +184,12 @@ export const CardEditorScreen: React.FC = () => {
 
           {/* Notes / Example */}
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5 flex items-center gap-1.5">
+            <label htmlFor="notes-input" className="flex text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5 items-center gap-1.5">
               <span>Context & Notes (Optional)</span>
               <Sparkles className="w-3.5 h-3.5 text-amber-500" />
             </label>
             <textarea
+              id="notes-input"
               rows={3}
               placeholder="e.g. Buongiorno a tutti! (Good morning everyone!)"
               value={notes}

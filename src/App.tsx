@@ -6,7 +6,7 @@ import {
   useLocation,
   Navigate,
 } from 'react-router-dom';
-import { Navbar } from './components/Navbar';
+import { Header } from './components/Header';
 import { BottomNav } from './components/BottomNav';
 import { HomeScreen } from './screens/HomeScreen';
 import { DeckDetailScreen } from './screens/DeckDetailScreen';
@@ -20,6 +20,7 @@ import { ErrorBoundary } from './components/ErrorBoundary';
 
 export interface RootOutletContext {
   setHideBottomNav: (hide: boolean) => void;
+  setHideTopNav: (hide: boolean) => void;
 }
 
 const RootLayout: React.FC = () => {
@@ -43,8 +44,9 @@ const RootLayout: React.FC = () => {
 
   const toggleDarkMode = () => setDarkMode((prev) => !prev);
 
-  // Dynamic bottom nav visibility controlled by child routes (e.g. StudyScreen active card review)
+  // Dynamic nav visibility controlled by child routes (e.g. StudyScreen active card review)
   const [hideBottomNav, setHideBottomNav] = useState(false);
+  const [hideTopNav, setHideTopNav] = useState(false);
   const location = useLocation();
 
   // Scroll to top on route change
@@ -62,7 +64,7 @@ const RootLayout: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors">
-      <Navbar darkMode={darkMode} onToggleDarkMode={toggleDarkMode} />
+      <Header darkMode={darkMode} onToggleDarkMode={toggleDarkMode} hideOnMobile={hideTopNav} />
 
       <main
         className={`flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col ${
@@ -70,7 +72,7 @@ const RootLayout: React.FC = () => {
         }`}
       >
         <ErrorBoundary>
-          <Outlet context={{ setHideBottomNav }} />
+          <Outlet context={{ setHideBottomNav, setHideTopNav }} />
         </ErrorBoundary>
       </main>
 
@@ -93,7 +95,6 @@ const router = createBrowserRouter([
       { path: 'deck/:deckId/cards/:cardId/edit', element: <CardEditorScreen /> },
       { path: 'deck/:deckId/bulk-add', element: <BulkAddScreen /> },
       { path: 'deck/:deckId/study', element: <StudyScreen /> },
-      { path: 'study/due', element: <StudyScreen /> },
       { path: 'profile', element: <ProfileScreen /> },
       { path: 'auth', element: <AuthScreen /> },
       { path: '*', element: <Navigate to="/" replace /> },

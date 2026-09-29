@@ -63,7 +63,7 @@ export const DeckList: React.FC<DeckListProps> = ({
 
           <button
             onClick={onOpenCreateModal}
-            className="px-5 py-3 rounded-2xl bg-brand-500 hover:bg-brand-400 text-slate-950 font-bold text-sm shadow-lg shadow-brand-500/25 hover:shadow-brand-500/40 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center gap-2 shrink-0"
+            className="hidden sm:flex px-5 py-3 rounded-2xl bg-brand-500 hover:bg-brand-400 text-slate-950 font-bold text-sm shadow-lg shadow-brand-500/25 hover:shadow-brand-500/40 hover:scale-[1.02] active:scale-[0.98] transition-all items-center gap-2 shrink-0"
           >
             <Plus className="w-4 h-4 stroke-[3]" />
             Create New Deck

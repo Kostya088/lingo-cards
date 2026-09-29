@@ -31,20 +31,20 @@ export const StudyConfigPanel: React.FC<StudyConfigPanelProps> = ({
 }) => {
   return (
     <div className="max-w-xl mx-auto p-4 sm:p-6 animate-fade-in space-y-6">
-      <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 p-6 sm:p-8 shadow-xl space-y-6">
+      <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 p-5 sm:p-8 shadow-xl space-y-6">
         {/* Header */}
-        <div className="flex items-start justify-between border-b border-slate-100 dark:border-slate-800 pb-5">
-          <div>
+        <div className="flex items-start justify-between border-b border-slate-100 dark:border-slate-800 pb-5 gap-3">
+          <div className="min-w-0">
             <span className="text-[11px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700">
               {deck.targetLanguage} &rarr; {deck.nativeLanguage}
             </span>
-            <h1 className="text-2xl font-heading font-bold text-slate-900 dark:text-white mt-1.5">
+            <h1 className="text-2xl font-heading font-bold text-slate-900 dark:text-white mt-1.5 truncate">
               Study: {deck.title}
             </h1>
           </div>
           <button
             onClick={onExit}
-            className="p-1.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+            className="p-1.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors shrink-0"
           >
             <X className="w-5 h-5" />
           </button>
@@ -55,7 +55,7 @@ export const StudyConfigPanel: React.FC<StudyConfigPanelProps> = ({
           <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
             Study Direction
           </label>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <button
               type="button"
               onClick={() => onDirectionChange('front-to-back')}
@@ -66,9 +66,9 @@ export const StudyConfigPanel: React.FC<StudyConfigPanelProps> = ({
               }`}
             >
               <p className="text-xs font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
-                <span>{deck.targetLanguage}</span>
-                <ArrowRight className="w-3 h-3 text-slate-400" />
-                <span>{deck.nativeLanguage}</span>
+                <span className="truncate">{deck.targetLanguage}</span>
+                <ArrowRight className="w-3 h-3 text-slate-400 shrink-0" />
+                <span className="truncate">{deck.nativeLanguage}</span>
               </p>
               <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1">
                 See foreign word &rarr; Speak translation
@@ -85,9 +85,9 @@ export const StudyConfigPanel: React.FC<StudyConfigPanelProps> = ({
               }`}
             >
               <p className="text-xs font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
-                <span>{deck.nativeLanguage}</span>
-                <ArrowRight className="w-3 h-3 text-slate-400" />
-                <span>{deck.targetLanguage}</span>
+                <span className="truncate">{deck.nativeLanguage}</span>
+                <ArrowRight className="w-3 h-3 text-slate-400 shrink-0" />
+                <span className="truncate">{deck.targetLanguage}</span>
               </p>
               <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1">
                 See translation &rarr; Speak foreign word
@@ -182,19 +182,19 @@ export const StudyConfigPanel: React.FC<StudyConfigPanelProps> = ({
         </div>
 
         {/* Start CTA */}
-        <div className="pt-4 flex items-center justify-end gap-3 border-t border-slate-100 dark:border-slate-800">
+        <div className="pt-4 flex flex-col-reverse sm:flex-row items-center justify-end gap-3 border-t border-slate-100 dark:border-slate-800">
           <button
             onClick={onExit}
-            className="px-4 py-2.5 text-xs font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors"
+            className="w-full sm:w-auto px-4 py-2.5 text-xs font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors"
           >
             Cancel
           </button>
           <button
             onClick={onStart}
             disabled={eligibleCount === 0}
-            className="px-6 py-2.5 text-xs font-bold text-white bg-brand-600 hover:bg-brand-500 disabled:opacity-40 rounded-xl shadow-lg shadow-brand-600/25 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center gap-2"
+            className="w-full sm:w-auto px-6 py-2.5 text-xs font-bold text-white bg-brand-600 hover:bg-brand-500 disabled:opacity-40 rounded-xl shadow-lg shadow-brand-600/25 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2"
           >
-            <Sparkles className="w-4 h-4" />
+            <Sparkles className="w-4 h-4 shrink-0" />
             Start Learning ({eligibleCount} Cards)
           </button>
         </div>
