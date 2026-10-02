@@ -19,6 +19,7 @@ export const StudyScreen: React.FC = () => {
   const [deck, setDeck] = useState<DeckWithStats | null>(null);
   const [cards, setCards] = useState<Card[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isConfiguring, setIsConfiguring] = useState(true);
   const [sessionStats, setSessionStats] = useState<SessionStats | null>(null);
   const [retryAction, setRetryAction] = useState<(() => void) | null>(null);
 
@@ -99,7 +100,7 @@ export const StudyScreen: React.FC = () => {
   // Summary Phase
   if (sessionStats) {
     return (
-      <div className="flex-1 flex flex-col justify-center py-6">
+      <div className="flex-1 flex flex-col justify-center py-2 sm:py-6 w-full">
         <SessionSummary
           stats={sessionStats}
           onRetryDifficult={handleRetry}
@@ -116,16 +117,17 @@ export const StudyScreen: React.FC = () => {
 
   // Active / Config Study Phase
   return (
-    <div className="flex-1 flex flex-col justify-center">
+    <div className={`flex-1 flex flex-col w-full ${isConfiguring ? 'justify-center py-2 sm:py-4' : 'h-full'}`}>
       <StudySession
         deck={deck}
         allCards={cards}
         onExit={handleExit}
         onSessionComplete={handleSessionComplete}
-        onStateChange={(isConfiguring) => {
+        onStateChange={(configuring) => {
+          setIsConfiguring(configuring);
           // Hide navigation ONLY during active card review
-          setHideBottomNav?.(!isConfiguring);
-          setHideTopNav?.(!isConfiguring);
+          setHideBottomNav?.(!configuring);
+          setHideTopNav?.(!configuring);
         }}
       />
     </div>
