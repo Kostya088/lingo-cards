@@ -15,7 +15,9 @@ interface AuthContextType {
   isConfigured: boolean;
   isLoading: boolean;
   signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
-  signUp: (email: string, password: string) => Promise<{ error: Error | null }>;
+  signUp: (email: string, password: string, displayName?: string) => Promise<{ error: Error | null }>;
+  updateProfile: (displayName: string) => Promise<{ error: Error | null }>;
+  updatePassword: (password: string) => Promise<{ error: Error | null }>;
   signOut: () => Promise<void>;
   syncNow: () => Promise<void>;
 }
@@ -173,11 +175,31 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   // Sign Up
-  const signUp = async (email: string, password: string) => {
+  const signUp = async (email: string, password: string, displayName?: string) => {
     if (!supabase) {
       return { error: new Error('Supabase is not configured.') };
     }
-    const { error } = await supabase.auth.signUp({ email, password });
+    const options = displayName ? { data: { display_name: displayName } } : undefined;
+    const { error } = await supabase.auth.signUp({ email, password, options });
+    return { error: error ? new Error(error.message) : null };
+  };
+
+  // Update Profile (Display Name)
+  const updateProfile = async (displayName: string) => {
+    if (!supabase) return { error: new Error('Supabase is not configured.') };
+    const { data, error } = await supabase.auth.updateUser({
+      data: { display_name: displayName }
+    });
+    if (data?.user) {
+      setUser(data.user);
+    }
+    return { error: error ? new Error(error.message) : null };
+  };
+
+  // Update Password
+  const updatePassword = async (password: string) => {
+    if (!supabase) return { error: new Error('Supabase is not configured.') };
+    const { error } = await supabase.auth.updateUser({ password });
     return { error: error ? new Error(error.message) : null };
   };
 
@@ -189,6 +211,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setSession(null);
     setSyncStatus('unauthenticated');
     setLastSyncedAt(null);
+    
+    // Clear local database on sign out to prevent data leakage between accounts
+    try {
+      await db.decks.clear();
+      await db.cards.clear();
+    } catch (e) {
+      console.error('Failed to clear local database on sign out:', e);
+    }
   };
 
   return (
@@ -203,6 +233,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         isLoading,
         signIn,
         signUp,
+        updateProfile,
+        updatePassword,
         signOut,
         syncNow,
       }}

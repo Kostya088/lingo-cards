@@ -80,8 +80,8 @@ export const Header: React.FC<HeaderProps> = ({
               ) : (
                 <Cloud className="w-4 h-4 text-slate-400" />
               )}
-              <span className="hidden sm:inline font-medium">
-                {user.email?.split("@")[0]}
+              <span className="hidden sm:inline font-medium max-w-[120px] md:max-w-[200px] truncate">
+                {user.user_metadata?.display_name || user.email?.split("@")[0]}
               </span>
             </Link>
           ) : (

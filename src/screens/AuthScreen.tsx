@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Mail, Lock, Sparkles, AlertCircle, Loader2, CheckCircle2, ArrowLeft } from 'lucide-react';
+import { Mail, Lock, Sparkles, AlertCircle, Loader2, CheckCircle2, ArrowLeft, User } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 export const AuthScreen: React.FC = () => {
@@ -10,6 +10,7 @@ export const AuthScreen: React.FC = () => {
   const [mode, setMode] = useState<'signin' | 'signup'>('signin');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [displayName, setDisplayName] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
@@ -21,6 +22,11 @@ export const AuthScreen: React.FC = () => {
 
     if (!email.trim() || !password.trim()) {
       setErrorMessage('Please fill in both email and password.');
+      return;
+    }
+
+    if (mode === 'signup' && !displayName.trim()) {
+      setErrorMessage('Please provide a display name.');
       return;
     }
 
@@ -36,10 +42,10 @@ export const AuthScreen: React.FC = () => {
         if (error) {
           setErrorMessage(error.message);
         } else {
-          navigate('/profile');
+          navigate('/');
         }
       } else {
-        const { error } = await signUp(email.trim(), password);
+        const { error } = await signUp(email.trim(), password, displayName.trim());
         if (error) {
           setErrorMessage(error.message);
         } else {
@@ -47,7 +53,7 @@ export const AuthScreen: React.FC = () => {
             'Account created successfully! If email confirmation is enabled, please check your inbox.'
           );
           setTimeout(() => {
-            navigate('/profile');
+            navigate('/');
           }, 1500);
         }
       }
@@ -144,6 +150,25 @@ export const AuthScreen: React.FC = () => {
 
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-4">
+            {mode === 'signup' && (
+              <div>
+                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">
+                  Display Name
+                </label>
+                <div className="relative">
+                  <User className="absolute left-3.5 top-3.5 w-4 h-4 text-slate-400" />
+                  <input
+                    type="text"
+                    required={mode === 'signup'}
+                    placeholder="Your Name"
+                    value={displayName}
+                    onChange={(e) => setDisplayName(e.target.value)}
+                    className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-500 text-sm transition-all"
+                  />
+                </div>
+              </div>
+            )}
+
             <div>
               <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">
                 Email Address
