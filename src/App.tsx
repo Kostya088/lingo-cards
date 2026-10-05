@@ -54,6 +54,15 @@ const RootLayout: React.FC = () => {
     window.scrollTo(0, 0);
   }, [location.pathname]);
 
+  // Determine if Header is hidden on mobile for focused sub-screens
+  const isHeaderHiddenOnMobile =
+    hideTopNav ||
+    location.pathname.startsWith('/decks/new') ||
+    location.pathname.includes('/edit') ||
+    location.pathname.includes('/cards/') ||
+    location.pathname.includes('/bulk-add') ||
+    location.pathname === '/auth';
+
   // Determine if BottomNav is present on this route for bottom padding
   const isBottomNavRoute =
     !hideBottomNav &&
@@ -67,9 +76,9 @@ const RootLayout: React.FC = () => {
       <Header darkMode={darkMode} onToggleDarkMode={toggleDarkMode} hideOnMobile={hideTopNav} />
 
       <main
-        className={`flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col ${
-          isBottomNavRoute ? 'pb-24 md:pb-6' : ''
-        }`}
+        className={`flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 lg:px-8 flex flex-col ${
+          isHeaderHiddenOnMobile ? 'pt-0 sm:pt-6' : 'pt-4 sm:pt-6'
+        } ${isBottomNavRoute ? 'pb-bottom-nav md:pb-6' : 'pb-6'}`}
       >
         <ErrorBoundary>
           <Outlet context={{ setHideBottomNav, setHideTopNav }} />

@@ -40,6 +40,10 @@
   .header-safe-top {
     padding-top: max(1.25rem, calc(env(safe-area-inset-top, 0px) + 0.75rem));
   }
+  /* Extra bottom padding for routes with BottomNav to maintain spacing in PWA */
+  .pb-bottom-nav {
+    padding-bottom: calc(6rem + env(safe-area-inset-bottom, 0px));
+  }
 }
 
 /* 3D Flip Card System */
