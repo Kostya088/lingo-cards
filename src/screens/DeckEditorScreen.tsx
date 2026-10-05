@@ -82,7 +82,7 @@ export const DeckEditorScreen: React.FC = () => {
           nativeLanguage: nativeLanguage.trim() || 'English',
           color,
         });
-        navigate(`/deck/${existingDeck.id}`);
+        navigate(`/decks/${existingDeck.id}`);
       } else {
         const newDeckId = await createDeck({
           title: title.trim(),
@@ -91,7 +91,7 @@ export const DeckEditorScreen: React.FC = () => {
           nativeLanguage: nativeLanguage.trim() || 'English',
           color,
         });
-        navigate(`/deck/${newDeckId}`);
+        navigate(`/decks/${newDeckId}`);
       }
     } catch (err: any) {
       setError(err.message || 'Failed to save deck.');
@@ -116,7 +116,13 @@ export const DeckEditorScreen: React.FC = () => {
           <div className="flex items-center gap-3 min-w-0">
             <button
               type="button"
-              onClick={() => navigate(isEditing ? `/deck/${deckId}` : '/')}
+              onClick={() => {
+                if (window.history.state && window.history.state.idx > 0) {
+                  navigate(-1);
+                } else {
+                  navigate(isEditing ? `/decks/${deckId}` : '/');
+                }
+              }}
               className="p-2 -ml-2 text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors shrink-0"
               aria-label="Back"
             >
@@ -233,7 +239,13 @@ export const DeckEditorScreen: React.FC = () => {
           <div className="pt-3 sm:pt-4 flex flex-col-reverse sm:flex-row items-center justify-end gap-2.5 sm:gap-3 border-t border-slate-100 dark:border-slate-800">
             <button
               type="button"
-              onClick={() => navigate(isEditing ? `/deck/${deckId}` : '/')}
+              onClick={() => {
+                if (window.history.state && window.history.state.idx > 0) {
+                  navigate(-1);
+                } else {
+                  navigate(isEditing ? `/decks/${deckId}` : '/');
+                }
+              }}
               className="w-full sm:w-auto px-5 py-3 text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors text-center min-h-[44px]"
             >
               Cancel

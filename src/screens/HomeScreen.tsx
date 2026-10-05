@@ -37,8 +37,8 @@ export const HomeScreen: React.FC = () => {
     <div className="flex-1">
       <DeckList
         decks={decks}
-        onSelectDeck={(deck) => navigate(`/deck/${deck.id}`)}
-        onStartStudy={(deck) => navigate(`/deck/${deck.id}/study`)}
+        onSelectDeck={(deck) => navigate(`/decks/${deck.id}`)}
+        onStartStudy={(deck) => navigate(`/decks/${deck.id}/study`)}
         onOpenCreateModal={() => navigate("/decks/new")}
         onEditDeck={(deck) => navigate(`/decks/${deck.id}/edit`)}
         onDeleteDeck={handleDeleteDeck}

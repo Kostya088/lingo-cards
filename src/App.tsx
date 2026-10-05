@@ -67,7 +67,7 @@ const RootLayout: React.FC = () => {
   const isBottomNavRoute =
     !hideBottomNav &&
     (location.pathname === '/' ||
-      /^\/deck\/[^/]+$/.test(location.pathname) ||
+      /^\/decks\/[^/]+$/.test(location.pathname) ||
       location.pathname === '/profile' ||
       location.pathname.includes('/study'));
 
@@ -97,13 +97,12 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <HomeScreen /> },
       { path: 'decks/new', element: <DeckEditorScreen /> },
+      { path: 'decks/:deckId', element: <DeckDetailScreen /> },
       { path: 'decks/:deckId/edit', element: <DeckEditorScreen /> },
-      { path: 'deck/:deckId', element: <DeckDetailScreen /> },
-      { path: 'deck/:deckId/edit', element: <DeckEditorScreen /> },
-      { path: 'deck/:deckId/cards/new', element: <CardEditorScreen /> },
-      { path: 'deck/:deckId/cards/:cardId/edit', element: <CardEditorScreen /> },
-      { path: 'deck/:deckId/bulk-add', element: <BulkAddScreen /> },
-      { path: 'deck/:deckId/study', element: <StudyScreen /> },
+      { path: 'decks/:deckId/cards/new', element: <CardEditorScreen /> },
+      { path: 'decks/:deckId/cards/:cardId/edit', element: <CardEditorScreen /> },
+      { path: 'decks/:deckId/bulk-add', element: <BulkAddScreen /> },
+      { path: 'decks/:deckId/study', element: <StudyScreen /> },
       { path: 'profile', element: <ProfileScreen /> },
       { path: 'auth', element: <AuthScreen /> },
       { path: '*', element: <Navigate to="/" replace /> },

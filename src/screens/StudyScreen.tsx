@@ -67,7 +67,7 @@ export const StudyScreen: React.FC = () => {
   const handleExit = () => {
     setHideBottomNav?.(false);
     setHideTopNav?.(false);
-    navigate(deckId ? `/deck/${deckId}` : '/');
+    navigate(deckId ? `/decks/${deckId}` : '/');
   };
 
   if (isLoading) {

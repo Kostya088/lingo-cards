@@ -86,7 +86,7 @@ export const CardEditorScreen: React.FC = () => {
         );
       }
 
-      navigate(`/deck/${deckId}`);
+      navigate(`/decks/${deckId}`);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to save flashcard.';
       setError(errorMessage);
@@ -114,7 +114,7 @@ export const CardEditorScreen: React.FC = () => {
           <div className="flex items-center gap-3">
             <button
               type="button"
-              onClick={() => navigate(`/deck/${deckId}`)}
+              onClick={() => navigate(`/decks/${deckId}`)}
               className="p-2 -ml-2 text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
               aria-label="Back to deck"
             >
@@ -202,7 +202,7 @@ export const CardEditorScreen: React.FC = () => {
           <div className="pt-4 flex items-center justify-end gap-3 border-t border-slate-100 dark:border-slate-800">
             <button
               type="button"
-              onClick={() => navigate(`/deck/${deckId}`)}
+              onClick={() => navigate(`/decks/${deckId}`)}
               className="px-5 py-2.5 text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors"
             >
               Cancel
