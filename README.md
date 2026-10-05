@@ -1,58 +1,51 @@
-# LingoCards 🗂️✨
+# LingoCards
 
-A clean, modern, local-first flashcards web application built with **React**, **TypeScript**, **Tailwind CSS**, and **Dexie.js (IndexedDB)** for mastering languages with spaced recall.
+An offline-first spaced repetition flashcard application.
 
----
+## Tech Stack
 
-## 🚀 Getting Started
+- **Frontend:** React, TypeScript, Vite, Tailwind CSS
+- **Storage:** Dexie.js (IndexedDB) for local storage, Supabase (PostgreSQL) for cloud sync
+- **Testing:** Vitest
 
-### 1. Run Development Server
+## Architecture Highlights
+
+- **Offline-First:** Runs entirely locally via IndexedDB. No network connection required to study.
+- **Authentication & Sync:** Supabase Auth for user management, paired with a custom sync service that pushes/pulls only changed records when online.
+- **Spaced Repetition System (SRS):** Custom algorithm to calculate optimal review intervals based on user ratings.
+
+## User Experience
+
+LingoCards is designed to be fast and distraction-free:
+
+1. **Create:** Users start with a blank slate and build custom decks, either individually or by pasting vocabulary lists.
+2. **Study:** Users test their recall by viewing the front of a card and rating how well they remembered the back (Bad, Medium, Good).
+3. **Sync (Optional):** While fully functional offline, users can log in to seamlessly sync their decks and progress across devices.
+
+## Setup & Scripts
 
 ```bash
+# Install dependencies
+npm install
+
+# Run local development server
 npm run dev
-```
 
-Open your browser at `http://localhost:3000` (or the port displayed in your terminal).
+# Run unit tests (tests SRS algorithm)
+npm run test
 
-### 2. Build for Production
-
-```bash
+# Build for production
 npm run build
 ```
 
----
+## Features
 
-## 🎯 Key Features & Workflow
-
-- **Clean State**: Starts completely clean without preloaded dummy packs. Create your own custom decks (e.g. Italian, French, German, Spanish).
-- **Spoken Self-Recall Workflow**:
-  1. See the word on the front of the flashcard.
-  2. Speak the translation aloud.
-  3. Turn over the card (press `Space` or click).
-  4. Rate your recall: **Bad (`1`)**, **Medium (`2`)**, **Good (`3`)**.
-- **Adaptive Spaced Repetition**:
-  - **Bad (`1`)**: Re-queues the card within the same session until learned, and shortens future review intervals.
-  - **Medium (`2`)**: Short interval boost.
-  - **Good (`3`)**: Advances review interval and promotes words to **Mastered**.
-- **Flexible Study Filters**:
-  - Study Direction: Foreign &rarr; Native or Native &rarr; Foreign.
-  - Filter: All Cards, Needs Review / Difficult Only, or Unmastered Only.
-- **Card Creation**:
-  - Single card add/edit modal.
-  - **Quick Bulk Add**: Paste multi-line vocabulary lists (`ciao - hello`, `merci : thank you`, etc.) with live preview.
-- **Local-First & Portable**:
-  - 100% offline browser storage using IndexedDB.
-- **Keyboard Shortcuts**:
+- **Study Workflow:** Review cards, rate recall (Bad/Medium/Good), and the SRS algorithm adjusts intervals automatically.
+- **Filters:** Study specific directions (Foreign -> Native) or filter by unmastered cards.
+- **Bulk Add:** Paste multiline vocabulary lists for rapid deck creation.
+- **Keyboard Shortcuts:**
   - `Space` / `Enter`: Flip card
-  - `1`: Rate Bad (Forgot / Re-queue)
-  - `2`: Rate Medium (Hesitated)
-  - `3`: Rate Good (Recalled well)
-  - `Escape`: Exit study session
-
----
-
-## 🛠️ Tech Stack
-
-- **Frontend**: React 18, TypeScript, Tailwind CSS, Lucide Icons, Canvas-Confetti
-- **Storage**: IndexedDB (via Dexie.js)
-- **Bundler**: Vite
+  - `1`: Rate Bad
+  - `2`: Rate Medium
+  - `3`: Rate Good
+  - `Escape`: Exit session
