@@ -129,7 +129,7 @@ export const ProfileSettings: React.FC<ProfileSettingsProps> = ({
       <div className="flex items-center gap-3">
         <button
           onClick={onNavigateHome}
-          className="p-2 sm:p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 shadow-sm transition-all"
+          className="p-2 sm:p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-50 dark:hover:bg-slate-800 shadow-sm transition-all shrink-0"
           aria-label="Back to decks"
         >
           <ArrowLeft className="w-5 h-5" />

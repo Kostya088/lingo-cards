@@ -67,12 +67,12 @@ export const AuthScreen: React.FC = () => {
   return (
     <div className="flex-1 flex flex-col -mx-4 sm:mx-0">
       {/* Top Header with Notch Clearance */}
-      <header className="sticky top-0 z-30 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 header-safe-top pb-3 px-4 sm:px-0 sm:border-0 sm:bg-transparent sm:static">
+      <header className="sticky top-0 z-30 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md sm:backdrop-blur-none border-b border-slate-200 dark:border-slate-800 header-safe-top pb-3 px-4 sm:px-0 sm:border-0 sm:bg-transparent sm:dark:bg-transparent sm:static">
         <div className="flex items-center justify-between max-w-md mx-auto">
           <button
             type="button"
             onClick={() => navigate(-1)}
-            className="p-2 -ml-2 text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors flex items-center gap-1.5 text-sm font-semibold"
+            className="px-3 py-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-50 dark:hover:bg-slate-800 shadow-sm transition-all flex items-center gap-1.5 text-sm font-semibold shrink-0"
             aria-label="Back"
           >
             <ArrowLeft className="w-5 h-5" />
