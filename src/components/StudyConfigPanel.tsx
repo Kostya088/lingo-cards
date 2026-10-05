@@ -196,7 +196,7 @@ export const StudyConfigPanel: React.FC<StudyConfigPanelProps> = ({
             disabled={eligibleCount === 0}
             className="w-full sm:w-auto px-6 py-3 text-xs font-bold text-white bg-brand-600 hover:bg-brand-500 disabled:opacity-40 rounded-xl shadow-lg shadow-brand-600/25 hover:scale-[1.01] active:scale-[0.99] transition-all flex items-center justify-center gap-2"
           >
-            <Sparkles className="w-4 h-4 shrink-0" />
+            <Sparkles className="w-5 h-5 shrink-0" />
             Start Learning ({eligibleCount} Cards)
           </button>
         </div>

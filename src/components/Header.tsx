@@ -72,13 +72,13 @@ export const Header: React.FC<HeaderProps> = ({
               title="Account & Cloud Sync"
             >
               {syncStatus === "syncing" ? (
-                <RefreshCw className="w-4 h-4 text-brand-500 animate-spin" />
+                <RefreshCw className="w-5 h-5 text-brand-500 animate-spin" />
               ) : syncStatus === "synced" ? (
-                <Cloud className="w-4 h-4 text-emerald-500" />
+                <Cloud className="w-5 h-5 text-emerald-500" />
               ) : syncStatus === "offline" ? (
-                <CloudOff className="w-4 h-4 text-amber-500" />
+                <CloudOff className="w-5 h-5 text-amber-500" />
               ) : (
-                <Cloud className="w-4 h-4 text-slate-400" />
+                <Cloud className="w-5 h-5 text-slate-400" />
               )}
               <span className="hidden sm:inline font-medium max-w-[120px] md:max-w-[200px] truncate">
                 {user.user_metadata?.display_name || user.email?.split("@")[0]}
@@ -89,7 +89,7 @@ export const Header: React.FC<HeaderProps> = ({
               to="/auth"
               className="hidden sm:flex items-center gap-1.5 px-3 py-2 text-xs sm:text-sm font-semibold text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-950/50 hover:bg-brand-100 dark:hover:bg-brand-900/60 rounded-xl transition-colors border border-brand-200 dark:border-brand-800"
             >
-              <UserIcon className="w-4 h-4" />
+              <UserIcon className="w-5 h-5" />
               <span>Sign In / Sync</span>
             </Link>
           )}
@@ -102,9 +102,9 @@ export const Header: React.FC<HeaderProps> = ({
             aria-label="Toggle Theme"
           >
             {darkMode ? (
-              <Sun className="w-4 h-4 text-amber-400" />
+              <Sun className="w-5 h-5 text-amber-400" />
             ) : (
-              <Moon className="w-4 h-4 text-slate-600" />
+              <Moon className="w-5 h-5 text-slate-600" />
             )}
           </button>
         </div>

@@ -86,7 +86,7 @@ export const StudyCardView: React.FC<StudyCardViewProps> = ({
                 title="Exit study session (Esc)"
                 aria-label="Exit study session"
               >
-                <X className="w-4 h-4" />
+                <X className="w-5 h-5" />
               </button>
             </div>
           </div>
@@ -185,7 +185,7 @@ export const StudyCardView: React.FC<StudyCardViewProps> = ({
                 onClick={onFlip}
                 className="w-full flex-1 min-h-[48px] rounded-xl bg-slate-900 hover:bg-slate-800 dark:bg-brand-600 dark:hover:bg-brand-500 text-white font-bold text-xs sm:text-sm shadow-md transition-all active:scale-[0.98] touch-manipulation flex items-center justify-center gap-2"
               >
-                <RotateCw className="w-4 h-4 shrink-0" />
+                <RotateCw className="w-5 h-5 shrink-0" />
                 <span>Turn Over Card</span>
                 <span className="hidden sm:inline text-xs opacity-75 font-normal">(Space)</span>
               </button>
@@ -203,7 +203,7 @@ export const StudyCardView: React.FC<StudyCardViewProps> = ({
                   className="flex flex-col items-center justify-center py-1 sm:py-1.5 px-1 min-h-[48px] rounded-xl bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/40 dark:hover:bg-rose-900/60 border border-rose-200 dark:border-rose-800 text-rose-700 dark:text-rose-300 text-center transition-all active:scale-95 touch-manipulation"
                 >
                   <div className="flex items-center justify-center gap-1 font-bold text-xs sm:text-sm leading-tight">
-                    <XCircle className="w-3.5 h-3.5 text-rose-500 shrink-0" />
+                    <XCircle className="w-5 h-5 text-rose-500 shrink-0" />
                     <span>Bad</span>
                   </div>
                   <p className="text-[9px] sm:text-[10px] text-rose-600/80 dark:text-rose-400/80 mt-0.5 truncate leading-none">
@@ -217,7 +217,7 @@ export const StudyCardView: React.FC<StudyCardViewProps> = ({
                   className="flex flex-col items-center justify-center py-1 sm:py-1.5 px-1 min-h-[48px] rounded-xl bg-amber-50 hover:bg-amber-100 dark:bg-amber-950/40 dark:hover:bg-amber-900/60 border border-amber-200 dark:border-amber-800 text-amber-700 dark:text-amber-300 text-center transition-all active:scale-95 touch-manipulation"
                 >
                   <div className="flex items-center justify-center gap-1 font-bold text-xs sm:text-sm leading-tight">
-                    <HelpCircle className="w-3.5 h-3.5 text-amber-500 shrink-0" />
+                    <HelpCircle className="w-5 h-5 text-amber-500 shrink-0" />
                     <span>Medium</span>
                   </div>
                   <p className="text-[9px] sm:text-[10px] text-amber-600/80 dark:text-amber-400/80 mt-0.5 truncate leading-none">
@@ -231,7 +231,7 @@ export const StudyCardView: React.FC<StudyCardViewProps> = ({
                   className="flex flex-col items-center justify-center py-1 sm:py-1.5 px-1 min-h-[48px] rounded-xl bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/40 dark:hover:bg-emerald-900/60 border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300 text-center transition-all active:scale-95 touch-manipulation"
                 >
                   <div className="flex items-center justify-center gap-1 font-bold text-xs sm:text-sm leading-tight">
-                    <CheckCircle className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+                    <CheckCircle className="w-5 h-5 text-emerald-500 shrink-0" />
                     <span>Good</span>
                   </div>
                   <p className="text-[9px] sm:text-[10px] text-emerald-600/80 dark:text-emerald-400/80 mt-0.5 truncate leading-none">

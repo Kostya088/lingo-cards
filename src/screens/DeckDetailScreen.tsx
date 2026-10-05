@@ -123,7 +123,7 @@ export const DeckDetailScreen: React.FC = () => {
           onClick={() => navigate('/')}
           className="inline-flex items-center gap-2 px-3.5 py-2 text-xs font-semibold text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors shadow-sm"
         >
-          <ArrowLeft className="w-4 h-4" />
+          <ArrowLeft className="w-5 h-5" />
           All Decks
         </button>
 
@@ -133,7 +133,7 @@ export const DeckDetailScreen: React.FC = () => {
             className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-xl transition-colors shadow-sm"
             title="Edit Deck Settings"
           >
-            <Edit2 className="w-3.5 h-3.5" />
+            <Edit2 className="w-5 h-5" />
             <span className="hidden sm:inline">Edit Deck</span>
           </button>
           <button
@@ -141,21 +141,21 @@ export const DeckDetailScreen: React.FC = () => {
             className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-xl transition-colors shadow-sm"
             title="Export Deck as Text"
           >
-            <Download className="w-3.5 h-3.5" />
+            <Download className="w-5 h-5" />
             <span className="hidden sm:inline">Export</span>
           </button>
           <button
             onClick={() => navigate(`/decks/${deckId}/bulk-add`)}
             className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-slate-800 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-xl transition-colors"
           >
-            <FileText className="w-3.5 h-3.5" />
+            <FileText className="w-5 h-5" />
             Bulk Add
           </button>
           <button
             onClick={() => navigate(`/decks/${deckId}/cards/new`)}
             className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-semibold text-white bg-slate-900 hover:bg-slate-800 dark:bg-slate-700 dark:hover:bg-slate-600 rounded-xl shadow-sm transition-all"
           >
-            <Plus className="w-3.5 h-3.5" />
+            <Plus className="w-5 h-5" />
             Add Card
           </button>
           <button
@@ -163,7 +163,7 @@ export const DeckDetailScreen: React.FC = () => {
             disabled={cards.length === 0}
             className="inline-flex items-center gap-1.5 px-5 py-2 text-xs font-bold text-white bg-brand-600 hover:bg-brand-500 disabled:opacity-40 rounded-xl shadow-md shadow-brand-600/20 hover:scale-[1.02] active:scale-[0.98] transition-all"
           >
-            <Play className="w-3.5 h-3.5 fill-current" />
+            <Play className="w-5 h-5 fill-current" />
             Study Deck
           </button>
         </div>
@@ -193,7 +193,7 @@ export const DeckDetailScreen: React.FC = () => {
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-4 border-t border-slate-100 dark:border-slate-800">
           <div className="bg-slate-50 dark:bg-slate-800/40 p-3 rounded-xl border border-slate-100 dark:border-slate-800 flex items-center gap-3">
             <div className="w-8 h-8 rounded-lg bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-slate-700 dark:text-slate-300">
-              <BookOpen className="w-4 h-4" />
+              <BookOpen className="w-5 h-5" />
             </div>
             <div>
               <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Total</p>
@@ -203,7 +203,7 @@ export const DeckDetailScreen: React.FC = () => {
 
           <div className="bg-emerald-50/50 dark:bg-emerald-950/20 p-3 rounded-xl border border-emerald-100 dark:border-emerald-900/40 flex items-center gap-3">
             <div className="w-8 h-8 rounded-lg bg-emerald-100 dark:bg-emerald-900/50 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
-              <CheckCircle2 className="w-4 h-4" />
+              <CheckCircle2 className="w-5 h-5" />
             </div>
             <div>
               <p className="text-[10px] uppercase font-bold text-emerald-600 dark:text-emerald-400 tracking-wider">Mastered</p>
@@ -213,7 +213,7 @@ export const DeckDetailScreen: React.FC = () => {
 
           <div className="bg-amber-50/50 dark:bg-amber-950/20 p-3 rounded-xl border border-amber-100 dark:border-amber-900/40 flex items-center gap-3">
             <div className="w-8 h-8 rounded-lg bg-amber-100 dark:bg-amber-900/50 flex items-center justify-center text-amber-600 dark:text-amber-400">
-              <Clock className="w-4 h-4" />
+              <Clock className="w-5 h-5" />
             </div>
             <div>
               <p className="text-[10px] uppercase font-bold text-amber-600 dark:text-amber-400 tracking-wider">Due For Review</p>
@@ -223,7 +223,7 @@ export const DeckDetailScreen: React.FC = () => {
 
           <div className="bg-blue-50/50 dark:bg-blue-950/20 p-3 rounded-xl border border-blue-100 dark:border-blue-900/40 flex items-center gap-3">
             <div className="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-900/50 flex items-center justify-center text-blue-600 dark:text-blue-400">
-              <Calendar className="w-4 h-4" />
+              <Calendar className="w-5 h-5" />
             </div>
             <div>
               <p className="text-[10px] uppercase font-bold text-blue-600 dark:text-blue-400 tracking-wider">Learning / New</p>
@@ -264,7 +264,7 @@ export const DeckDetailScreen: React.FC = () => {
 
           {/* Search Box */}
           <div className="relative w-full sm:w-60">
-            <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+            <Search className="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
             <input
               type="text"
               placeholder="Search words..."

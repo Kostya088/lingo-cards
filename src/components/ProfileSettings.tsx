@@ -169,28 +169,48 @@ export const ProfileSettings: React.FC<ProfileSettingsProps> = ({
                       disabled={isSubmittingName}
                       className="w-full px-3 py-1.5 text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-500 transition-all"
                     />
-                    <button onClick={handleSaveName} disabled={isSubmittingName} className="p-1.5 text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-950/50 rounded-lg">
-                      {isSubmittingName ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCircle2 className="w-4 h-4" />}
+                    <button
+                      onClick={handleSaveName}
+                      disabled={isSubmittingName}
+                      className="p-1.5 text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-950/50 rounded-lg"
+                    >
+                      {isSubmittingName ? (
+                        <Loader2 className="w-5 h-5 animate-spin" />
+                      ) : (
+                        <CheckCircle2 className="w-5 h-5" />
+                      )}
                     </button>
-                    <button onClick={() => setIsEditingName(false)} disabled={isSubmittingName} className="p-1.5 text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg">
-                      <X className="w-4 h-4" />
+                    <button
+                      onClick={() => setIsEditingName(false)}
+                      disabled={isSubmittingName}
+                      className="p-1.5 text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg"
+                    >
+                      <X className="w-5 h-5" />
                     </button>
                   </div>
                 ) : (
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-4">
                     <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-slate-100 truncate max-w-[180px] xs:max-w-[200px] sm:max-w-none">
                       {user.user_metadata?.display_name || user.email}
                     </h2>
-                    <button onClick={() => { setEditName(user.user_metadata?.display_name || ""); setIsEditingName(true); }} className="p-1 text-slate-400 hover:text-brand-500 transition-colors rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800">
-                      <Edit2 className="w-3.5 h-3.5" />
+                    <button
+                      onClick={() => {
+                        setEditName(user.user_metadata?.display_name || "");
+                        setIsEditingName(true);
+                      }}
+                      className="p-1 text-slate-400 hover:text-brand-500 transition-colors rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800"
+                    >
+                      <Edit2 className="w-5 h-5" />
                     </button>
                   </div>
                 )}
                 <div className="flex items-center gap-1.5 text-xs text-emerald-600 dark:text-emerald-400 font-medium mt-0.5">
-                  <ShieldCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
+                  <ShieldCheck className="w-5 h-5 sm:w-4 sm:h-4 shrink-0" />
                   <span>Cloud Connected</span>
                   {!user.user_metadata?.display_name && (
-                    <span className="text-slate-400 dark:text-slate-500 ml-1 font-normal hidden sm:inline">({user.email})</span>
+                    <span className="text-slate-400 dark:text-slate-500 ml-1 font-normal hidden sm:inline">
+                      ({user.email})
+                    </span>
                   )}
                 </div>
               </div>
@@ -201,14 +221,14 @@ export const ProfileSettings: React.FC<ProfileSettingsProps> = ({
                 onClick={() => setIsChangingPassword(!isChangingPassword)}
                 className="w-full sm:w-auto justify-center px-4 py-2 text-sm font-semibold rounded-xl text-slate-700 dark:text-slate-300 bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700/60 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors flex items-center gap-2"
               >
-                <Key className="w-4 h-4" />
+                <Key className="w-5 h-5" />
                 Password
               </button>
               <button
                 onClick={() => signOut()}
                 className="w-full sm:w-auto justify-center px-4 py-2 text-sm font-semibold rounded-xl text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800/60 hover:bg-rose-100 dark:hover:bg-rose-900/60 transition-colors flex items-center gap-2"
               >
-                <LogOut className="w-4 h-4" />
+                <LogOut className="w-5 h-5" />
                 Sign Out
               </button>
             </div>
@@ -217,10 +237,23 @@ export const ProfileSettings: React.FC<ProfileSettingsProps> = ({
           {/* Inline Change Password Form */}
           {isChangingPassword && (
             <div className="pt-4 border-t border-slate-100 dark:border-slate-800 animate-fade-in">
-              <form onSubmit={handleChangePassword} className="space-y-3 max-w-sm">
-                <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100">Change Password</h3>
-                {passwordError && <div className="text-xs text-rose-600 bg-rose-50 dark:bg-rose-950/50 p-2 rounded-lg border border-rose-200 dark:border-rose-800">{passwordError}</div>}
-                {passwordSuccess && <div className="text-xs text-emerald-600 bg-emerald-50 dark:bg-emerald-950/50 p-2 rounded-lg border border-emerald-200 dark:border-emerald-800">{passwordSuccess}</div>}
+              <form
+                onSubmit={handleChangePassword}
+                className="space-y-3 max-w-sm"
+              >
+                <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100">
+                  Change Password
+                </h3>
+                {passwordError && (
+                  <div className="text-xs text-rose-600 bg-rose-50 dark:bg-rose-950/50 p-2 rounded-lg border border-rose-200 dark:border-rose-800">
+                    {passwordError}
+                  </div>
+                )}
+                {passwordSuccess && (
+                  <div className="text-xs text-emerald-600 bg-emerald-50 dark:bg-emerald-950/50 p-2 rounded-lg border border-emerald-200 dark:border-emerald-800">
+                    {passwordSuccess}
+                  </div>
+                )}
                 <div>
                   <input
                     type="password"
@@ -242,9 +275,21 @@ export const ProfileSettings: React.FC<ProfileSettingsProps> = ({
                   />
                 </div>
                 <div className="flex items-center justify-end gap-2 pt-1">
-                  <button type="button" onClick={() => setIsChangingPassword(false)} className="px-3 py-1.5 text-xs font-semibold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors">Cancel</button>
-                  <button type="submit" disabled={isSubmittingPassword} className="px-3 py-1.5 text-xs font-semibold bg-brand-600 hover:bg-brand-500 text-white rounded-lg flex items-center gap-2 transition-colors">
-                    {isSubmittingPassword && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
+                  <button
+                    type="button"
+                    onClick={() => setIsChangingPassword(false)}
+                    className="px-3 py-1.5 text-xs font-semibold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={isSubmittingPassword}
+                    className="px-3 py-1.5 text-xs font-semibold bg-brand-600 hover:bg-brand-500 text-white rounded-lg flex items-center gap-2 transition-colors"
+                  >
+                    {isSubmittingPassword && (
+                      <Loader2 className="w-5 h-5 animate-spin" />
+                    )}
                     Save Password
                   </button>
                 </div>
@@ -287,7 +332,7 @@ export const ProfileSettings: React.FC<ProfileSettingsProps> = ({
               {syncStatus === "synced" && (
                 <>
                   <div className="p-2 shrink-0 rounded-xl bg-emerald-100 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400 mt-0.5 sm:mt-0">
-                    <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5" />
+                    <CheckCircle2 className="w-5 h-5 sm:w-5 sm:h-5" />
                   </div>
                   <div>
                     <div className="text-sm font-semibold text-slate-900 dark:text-slate-100">
@@ -304,7 +349,7 @@ export const ProfileSettings: React.FC<ProfileSettingsProps> = ({
               {syncStatus === "syncing" && (
                 <>
                   <div className="p-2 shrink-0 rounded-xl bg-brand-100 dark:bg-brand-950 text-brand-600 dark:text-brand-400 mt-0.5 sm:mt-0">
-                    <RefreshCw className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
+                    <RefreshCw className="w-5 h-5 sm:w-5 sm:h-5 animate-spin" />
                   </div>
                   <div>
                     <div className="text-sm font-semibold text-slate-900 dark:text-slate-100">
@@ -320,7 +365,7 @@ export const ProfileSettings: React.FC<ProfileSettingsProps> = ({
               {syncStatus === "offline" && (
                 <>
                   <div className="p-2 shrink-0 rounded-xl bg-amber-100 dark:bg-amber-950 text-amber-600 dark:text-amber-400 mt-0.5 sm:mt-0">
-                    <CloudOff className="w-4 h-4 sm:w-5 sm:h-5" />
+                    <CloudOff className="w-5 h-5 sm:w-5 sm:h-5" />
                   </div>
                   <div>
                     <div className="text-sm font-semibold text-slate-900 dark:text-slate-100">
@@ -337,7 +382,7 @@ export const ProfileSettings: React.FC<ProfileSettingsProps> = ({
               {syncStatus === "error" && (
                 <>
                   <div className="p-2 shrink-0 rounded-xl bg-rose-100 dark:bg-rose-950 text-rose-600 dark:text-rose-400 mt-0.5 sm:mt-0">
-                    <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5" />
+                    <AlertCircle className="w-5 h-5 sm:w-5 sm:h-5" />
                   </div>
                   <div>
                     <div className="text-sm font-semibold text-rose-600 dark:text-rose-400">
@@ -356,7 +401,7 @@ export const ProfileSettings: React.FC<ProfileSettingsProps> = ({
         /* Guest Mode Promo Card */
         <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-brand-950 text-white rounded-3xl p-5 sm:p-8 shadow-xl border border-slate-700/60 relative overflow-hidden space-y-4">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-brand-500/20 border border-brand-400/30 text-brand-300 text-xs font-semibold">
-            <Sparkles className="w-3.5 h-3.5 shrink-0" />
+            <Sparkles className="w-5 h-5 shrink-0" />
             Guest Mode (Local Storage Only)
           </div>
           <h2 className="text-xl sm:text-2xl font-bold font-heading">
@@ -382,7 +427,7 @@ export const ProfileSettings: React.FC<ProfileSettingsProps> = ({
       {/* Local Storage Stats */}
       <div className="bg-white dark:bg-slate-900 rounded-3xl p-4 sm:p-6 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
         <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100 flex items-center gap-2">
-          <HardDrive className="w-4 h-4 text-brand-500 shrink-0" />
+          <HardDrive className="w-5 h-5 text-brand-500 shrink-0" />
           Statistics
         </h3>
         <div className="grid grid-cols-2 gap-3 sm:gap-4">

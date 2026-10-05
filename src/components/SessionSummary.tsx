@@ -56,7 +56,7 @@ export const SessionSummary: React.FC<SessionSummaryProps> = ({
 
         <div className="space-y-1">
           <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700 text-[11px] sm:text-xs font-bold">
-            <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+            <Sparkles className="w-5 h-5 text-amber-500" />
             Session Complete!
           </div>
           <h1 className="text-xl sm:text-2xl font-heading font-extrabold text-slate-900 dark:text-white truncate" title={stats.deckTitle}>
@@ -103,7 +103,7 @@ export const SessionSummary: React.FC<SessionSummaryProps> = ({
 
           <div className="grid grid-cols-3 gap-1.5 sm:gap-2 text-left">
             <div className="flex items-center gap-1.5 p-2 rounded-xl bg-white dark:bg-slate-800 border border-slate-200/60 dark:border-slate-700/60">
-              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+              <CheckCircle2 className="w-5 h-5 text-emerald-500 shrink-0" />
               <div>
                 <p className="font-bold text-slate-900 dark:text-white leading-tight">{stats.goodCount}</p>
                 <p className="text-[9px] sm:text-[10px] text-slate-400 leading-none">Good</p>
@@ -111,7 +111,7 @@ export const SessionSummary: React.FC<SessionSummaryProps> = ({
             </div>
 
             <div className="flex items-center gap-1.5 p-2 rounded-xl bg-white dark:bg-slate-800 border border-slate-200/60 dark:border-slate-700/60">
-              <HelpCircle className="w-3.5 h-3.5 text-amber-500 shrink-0" />
+              <HelpCircle className="w-5 h-5 text-amber-500 shrink-0" />
               <div>
                 <p className="font-bold text-slate-900 dark:text-white leading-tight">{stats.mediumCount}</p>
                 <p className="text-[9px] sm:text-[10px] text-slate-400 leading-none">Medium</p>
@@ -119,7 +119,7 @@ export const SessionSummary: React.FC<SessionSummaryProps> = ({
             </div>
 
             <div className="flex items-center gap-1.5 p-2 rounded-xl bg-white dark:bg-slate-800 border border-slate-200/60 dark:border-slate-700/60">
-              <XCircle className="w-3.5 h-3.5 text-rose-500 shrink-0" />
+              <XCircle className="w-5 h-5 text-rose-500 shrink-0" />
               <div>
                 <p className="font-bold text-slate-900 dark:text-white leading-tight">{stats.badCount}</p>
                 <p className="text-[9px] sm:text-[10px] text-slate-400 leading-none">Bad</p>
@@ -129,7 +129,7 @@ export const SessionSummary: React.FC<SessionSummaryProps> = ({
 
           {stats.newMasteredCount > 0 && (
             <div className="p-2 sm:p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700 flex items-center justify-center gap-1.5 font-semibold text-xs">
-              <Sparkles className="w-3.5 h-3.5 text-amber-500 shrink-0" />
+              <Sparkles className="w-5 h-5 text-amber-500 shrink-0" />
               <span>{stats.newMasteredCount} word{stats.newMasteredCount > 1 ? 's' : ''} promoted to Mastered!</span>
             </div>
           )}
@@ -142,7 +142,7 @@ export const SessionSummary: React.FC<SessionSummaryProps> = ({
               onClick={onRetryDifficult}
               className="w-full py-3 px-4 rounded-xl bg-brand-600 hover:bg-brand-500 text-white font-bold text-xs shadow-md shadow-brand-600/20 hover:scale-[1.01] active:scale-[0.99] transition-all flex items-center justify-center gap-2"
             >
-              <RotateCcw className="w-3.5 h-3.5" />
+              <RotateCcw className="w-5 h-5" />
               Practice Needs-Review Words Again
             </button>
           )}
@@ -152,7 +152,7 @@ export const SessionSummary: React.FC<SessionSummaryProps> = ({
               onClick={onReturnToDeck}
               className="py-2.5 px-3 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-semibold text-xs transition-colors flex items-center justify-center gap-1.5"
             >
-              <ArrowRight className="w-3.5 h-3.5" />
+              <ArrowRight className="w-5 h-5" />
               Return to Deck
             </button>
 
@@ -160,7 +160,7 @@ export const SessionSummary: React.FC<SessionSummaryProps> = ({
               onClick={onReturnHome}
               className="py-2.5 px-3 rounded-xl bg-slate-900 dark:bg-white hover:bg-slate-800 dark:hover:bg-slate-100 text-white dark:text-slate-900 font-semibold text-xs transition-colors flex items-center justify-center gap-1.5"
             >
-              <Layers className="w-3.5 h-3.5" />
+              <Layers className="w-5 h-5" />
               All Decks
             </button>
           </div>

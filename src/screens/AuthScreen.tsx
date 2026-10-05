@@ -156,7 +156,7 @@ export const AuthScreen: React.FC = () => {
                   Display Name
                 </label>
                 <div className="relative">
-                  <User className="absolute left-3.5 top-3.5 w-4 h-4 text-slate-400" />
+                  <User className="absolute left-3.5 top-3.5 w-5 h-5 text-slate-400" />
                   <input
                     type="text"
                     required={mode === 'signup'}
@@ -174,7 +174,7 @@ export const AuthScreen: React.FC = () => {
                 Email Address
               </label>
               <div className="relative">
-                <Mail className="absolute left-3.5 top-3.5 w-4 h-4 text-slate-400" />
+                <Mail className="absolute left-3.5 top-3.5 w-5 h-5 text-slate-400" />
                 <input
                   type="email"
                   required
@@ -192,7 +192,7 @@ export const AuthScreen: React.FC = () => {
                 Password
               </label>
               <div className="relative">
-                <Lock className="absolute left-3.5 top-3.5 w-4 h-4 text-slate-400" />
+                <Lock className="absolute left-3.5 top-3.5 w-5 h-5 text-slate-400" />
                 <input
                   type="password"
                   required
@@ -211,7 +211,7 @@ export const AuthScreen: React.FC = () => {
             >
               {isSubmitting ? (
                 <>
-                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <Loader2 className="w-5 h-5 animate-spin" />
                   <span>Processing...</span>
                 </>
               ) : (

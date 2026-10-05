@@ -65,7 +65,7 @@ export const DeckList: React.FC<DeckListProps> = ({
         <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
           <div className="space-y-2 max-w-xl">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-800/90 border border-slate-700 text-slate-200 text-xs font-semibold">
-              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+              <Sparkles className="w-5 h-5 text-amber-400" />
               Smart Spaced Repetition Learning
             </div>
             <h1 className="text-2xl sm:text-3xl font-heading font-extrabold tracking-tight">
@@ -82,7 +82,7 @@ export const DeckList: React.FC<DeckListProps> = ({
             onClick={onOpenCreateModal}
             className="hidden sm:flex px-5 py-3 rounded-2xl bg-brand-500 hover:bg-brand-400 text-slate-950 font-bold text-sm shadow-lg shadow-brand-500/25 hover:shadow-brand-500/40 hover:scale-[1.02] active:scale-[0.98] transition-all items-center gap-2 shrink-0"
           >
-            <Plus className="w-4 h-4 stroke-[3]" />
+            <Plus className="w-5 h-5 stroke-[3]" />
             Create New Deck
           </button>
         </div>
@@ -95,7 +95,7 @@ export const DeckList: React.FC<DeckListProps> = ({
               <div className="flex items-center justify-between sm:justify-start gap-3 p-2.5 sm:p-0 rounded-2xl bg-slate-800/40 sm:bg-transparent border border-slate-700/40 sm:border-0">
                 <div className="flex items-center gap-3">
                   <div className="w-9 h-9 rounded-xl bg-slate-800 flex items-center justify-center text-slate-300 shrink-0">
-                    <BookOpen className="w-4 h-4 shrink-0" />
+                    <BookOpen className="w-5 h-5 shrink-0" />
                   </div>
                   <div>
                     <p className="text-[11px] font-medium text-slate-400 uppercase tracking-wider">
@@ -115,7 +115,7 @@ export const DeckList: React.FC<DeckListProps> = ({
               <div className="flex items-center justify-between sm:justify-start gap-3 p-2.5 sm:p-0 rounded-2xl bg-slate-800/40 sm:bg-transparent border border-slate-700/40 sm:border-0">
                 <div className="flex items-center gap-3">
                   <div className="w-9 h-9 rounded-xl bg-emerald-950/60 border border-emerald-800/50 flex items-center justify-center text-emerald-400 shrink-0">
-                    <CheckCircle2 className="w-4 h-4 shrink-0" />
+                    <CheckCircle2 className="w-5 h-5 shrink-0" />
                   </div>
                   <div>
                     <p className="text-[11px] font-medium text-emerald-300/80 uppercase tracking-wider">
@@ -135,7 +135,7 @@ export const DeckList: React.FC<DeckListProps> = ({
               <div className="flex items-center justify-between sm:justify-start gap-3 p-2.5 sm:p-0 rounded-2xl bg-slate-800/40 sm:bg-transparent border border-slate-700/40 sm:border-0">
                 <div className="flex items-center gap-3">
                   <div className="w-9 h-9 rounded-xl bg-amber-950/60 border border-amber-800/50 flex items-center justify-center text-amber-400 shrink-0">
-                    <Clock className="w-4 h-4 shrink-0" />
+                    <Clock className="w-5 h-5 shrink-0" />
                   </div>
                   <div>
                     <p className="text-[11px] font-medium text-amber-300/80 uppercase tracking-wider">
@@ -171,7 +171,7 @@ export const DeckList: React.FC<DeckListProps> = ({
 
         {decks.length > 0 && (
           <div className="relative w-full sm:w-64">
-            <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+            <Search className="w-5 h-5 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
             <input
               type="text"
               placeholder="Search decks or language..."
@@ -202,7 +202,7 @@ export const DeckList: React.FC<DeckListProps> = ({
             onClick={onOpenCreateModal}
             className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-500 text-white font-semibold text-xs shadow-md shadow-brand-600/20 hover:scale-105 active:scale-95 transition-all"
           >
-            <Plus className="w-4 h-4" />
+            <Plus className="w-5 h-5" />
             Create Your First Deck
           </button>
         </div>

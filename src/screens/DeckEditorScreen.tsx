@@ -229,7 +229,7 @@ export const DeckEditorScreen: React.FC = () => {
                   }`}
                   aria-label={`Select ${c.id} color`}
                 >
-                  {color === c.id && <Check className="w-4 h-4 stroke-[2.5]" />}
+                  {color === c.id && <Check className="w-5 h-5 stroke-[2.5]" />}
                 </button>
               ))}
             </div>
@@ -255,7 +255,7 @@ export const DeckEditorScreen: React.FC = () => {
               disabled={isSubmitting}
               className="w-full sm:w-auto px-6 py-3 text-xs sm:text-sm font-bold text-white bg-brand-600 hover:bg-brand-500 rounded-xl shadow-lg shadow-brand-600/25 disabled:opacity-50 hover:scale-[1.01] active:scale-[0.99] transition-all flex items-center justify-center gap-2 min-h-[44px]"
             >
-              {isSubmitting && <Loader2 className="w-4 h-4 animate-spin shrink-0" />}
+              {isSubmitting && <Loader2 className="w-5 h-5 animate-spin shrink-0" />}
               <span>{isSubmitting ? 'Saving...' : isEditing ? 'Update Deck' : 'Create Deck'}</span>
             </button>
           </div>
