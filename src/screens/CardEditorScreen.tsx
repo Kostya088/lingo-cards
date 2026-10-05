@@ -135,10 +135,10 @@ export const CardEditorScreen: React.FC = () => {
       </header>
 
       {/* Form Content */}
-      <div className="flex-1 max-w-xl w-full mx-auto p-4 sm:p-0 sm:my-6">
+      <div className="flex-1 max-w-xl w-full mx-auto p-4 sm:p-0 sm:my-6 pb-safe">
         <form
           onSubmit={handleSubmit}
-          className="bg-white dark:bg-slate-900 sm:rounded-2xl sm:border sm:border-slate-200 sm:dark:border-slate-800 sm:p-6 sm:shadow-sm space-y-5"
+          className="bg-white dark:bg-slate-900 rounded-2xl sm:rounded-3xl border border-slate-200 dark:border-slate-800 p-4 sm:p-7 shadow-sm sm:shadow-xl space-y-4 sm:space-y-5"
         >
           {error && (
             <div className="p-3 text-sm text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/50 border border-rose-200 dark:border-rose-800 rounded-xl">

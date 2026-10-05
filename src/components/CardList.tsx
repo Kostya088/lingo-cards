@@ -1,6 +1,6 @@
-import React from 'react';
-import { Edit2, Trash2 } from 'lucide-react';
-import { type Card, type MasteryLevel } from '../types';
+import React from "react";
+import { Edit2, Trash2 } from "lucide-react";
+import { type Card, type MasteryLevel } from "../types";
 
 interface CardListProps {
   cards: Card[];
@@ -8,14 +8,37 @@ interface CardListProps {
   onDeleteCard: (cardId: string) => void;
 }
 
-const LEVEL_LABELS: Record<MasteryLevel, { label: string; bg: string; text: string }> = {
-  0: { label: 'New', bg: 'bg-slate-100 dark:bg-slate-800', text: 'text-slate-600 dark:text-slate-400' },
-  1: { label: 'Learning', bg: 'bg-amber-50 dark:bg-amber-950/40', text: 'text-amber-600 dark:text-amber-400' },
-  2: { label: 'Review', bg: 'bg-blue-50 dark:bg-blue-950/40', text: 'text-blue-600 dark:text-blue-400' },
-  3: { label: 'Mastered', bg: 'bg-emerald-50 dark:bg-emerald-950/40', text: 'text-emerald-600 dark:text-emerald-400' },
+const LEVEL_LABELS: Record<
+  MasteryLevel,
+  { label: string; bg: string; text: string }
+> = {
+  0: {
+    label: "New",
+    bg: "bg-slate-100 dark:bg-slate-800",
+    text: "text-slate-600 dark:text-slate-400",
+  },
+  1: {
+    label: "Learning",
+    bg: "bg-amber-50 dark:bg-amber-950/40",
+    text: "text-amber-600 dark:text-amber-400",
+  },
+  2: {
+    label: "Review",
+    bg: "bg-blue-50 dark:bg-blue-950/40",
+    text: "text-blue-600 dark:text-blue-400",
+  },
+  3: {
+    label: "Mastered",
+    bg: "bg-emerald-50 dark:bg-emerald-950/40",
+    text: "text-emerald-600 dark:text-emerald-400",
+  },
 };
 
-export const CardList: React.FC<CardListProps> = ({ cards, onEditCard, onDeleteCard }) => {
+export const CardList: React.FC<CardListProps> = ({
+  cards,
+  onEditCard,
+  onDeleteCard,
+}) => {
   const now = Date.now();
 
   return (
@@ -32,7 +55,9 @@ export const CardList: React.FC<CardListProps> = ({ cards, onEditCard, onDeleteC
             {/* Top line: Badges on left, Action buttons on right */}
             <div className="flex items-center justify-between gap-2">
               <div className="flex items-center gap-1.5 flex-wrap">
-                <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${lvlInfo.bg} ${lvlInfo.text}`}>
+                <span
+                  className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${lvlInfo.bg} ${lvlInfo.text}`}
+                >
                   {lvlInfo.label}
                 </span>
                 {isDue && (
@@ -49,14 +74,14 @@ export const CardList: React.FC<CardListProps> = ({ cards, onEditCard, onDeleteC
                   className="p-1.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
                   title="Edit card"
                 >
-                  <Edit2 className="w-3.5 h-3.5" />
+                  <Edit2 className="w-5 h-5" />
                 </button>
                 <button
                   onClick={() => card.id && onDeleteCard(card.id)}
                   className="p-1.5 text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 rounded-lg transition-colors"
                   title="Delete card"
                 >
-                  <Trash2 className="w-3.5 h-3.5" />
+                  <Trash2 className="w-5 h-5" />
                 </button>
               </div>
             </div>
