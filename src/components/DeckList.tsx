@@ -1,7 +1,15 @@
-import React, { useState, useMemo } from 'react';
-import { Plus, Search, Layers, Sparkles, CheckCircle2, Clock, BookOpen } from 'lucide-react';
-import { type DeckWithStats } from '../types';
-import { DeckCard } from './DeckCard';
+import React, { useState, useMemo } from "react";
+import {
+  Plus,
+  Search,
+  Layers,
+  Sparkles,
+  CheckCircle2,
+  Clock,
+  BookOpen,
+} from "lucide-react";
+import { type DeckWithStats } from "../types";
+import { DeckCard } from "./DeckCard";
 
 interface DeckListProps {
   decks: DeckWithStats[];
@@ -22,12 +30,21 @@ export const DeckList: React.FC<DeckListProps> = ({
   onDeleteDeck,
   onExportDeck,
 }) => {
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
 
   // Overall collection stats
-  const totalCards = useMemo(() => decks.reduce((acc, d) => acc + d.totalCards, 0), [decks]);
-  const totalMastered = useMemo(() => decks.reduce((acc, d) => acc + d.masteredCount, 0), [decks]);
-  const totalDue = useMemo(() => decks.reduce((acc, d) => acc + d.dueCount, 0), [decks]);
+  const totalCards = useMemo(
+    () => decks.reduce((acc, d) => acc + d.totalCards, 0),
+    [decks],
+  );
+  const totalMastered = useMemo(
+    () => decks.reduce((acc, d) => acc + d.masteredCount, 0),
+    [decks],
+  );
+  const totalDue = useMemo(
+    () => decks.reduce((acc, d) => acc + d.dueCount, 0),
+    [decks],
+  );
 
   const filteredDecks = useMemo(() => {
     if (!searchQuery.trim()) return decks;
@@ -36,17 +53,17 @@ export const DeckList: React.FC<DeckListProps> = ({
       (d) =>
         d.title.toLowerCase().includes(query) ||
         d.targetLanguage.toLowerCase().includes(query) ||
-        (d.description && d.description.toLowerCase().includes(query))
+        (d.description && d.description.toLowerCase().includes(query)),
     );
   }, [decks, searchQuery]);
 
   return (
     <div className="space-y-8 animate-fade-in">
       {/* Top Banner / Stats Overview */}
-      <div className="bg-gradient-to-r from-slate-900 via-slate-800 to-brand-950 text-white rounded-3xl p-6 sm:p-8 shadow-xl border border-slate-700/50 relative overflow-hidden">
+      <div className="bg-gradient-to-r from-slate-900 via-slate-900 to-slate-950 dark:via-slate-800 dark:to-brand-950 text-white rounded-3xl p-6 sm:p-8 shadow-xl border border-slate-700/50 relative overflow-hidden">
         {/* Background decorative glow */}
         <div className="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 bg-brand-500/10 rounded-full blur-3xl pointer-events-none" />
-        
+
         <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
           <div className="space-y-2 max-w-xl">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-800/90 border border-slate-700 text-slate-200 text-xs font-semibold">
@@ -57,7 +74,9 @@ export const DeckList: React.FC<DeckListProps> = ({
               Master New Languages
             </h1>
             <p className="text-slate-300 text-sm leading-relaxed">
-              Speak the translation aloud before flipping, self-evaluate your recall, and let our adaptive algorithm prioritize the words you need most.
+              Speak the translation aloud before flipping, self-evaluate your
+              recall, and let our adaptive algorithm prioritize the words you
+              need most.
             </p>
           </div>
 
@@ -81,11 +100,17 @@ export const DeckList: React.FC<DeckListProps> = ({
                     <BookOpen className="w-4 h-4 shrink-0" />
                   </div>
                   <div>
-                    <p className="text-[11px] font-medium text-slate-400 uppercase tracking-wider">Total Cards</p>
-                    <p className="text-base sm:text-lg font-bold text-white hidden sm:block">{totalCards}</p>
+                    <p className="text-[11px] font-medium text-slate-400 uppercase tracking-wider">
+                      Total Cards
+                    </p>
+                    <p className="text-base sm:text-lg font-bold text-white hidden sm:block">
+                      {totalCards}
+                    </p>
                   </div>
                 </div>
-                <p className="text-base font-bold text-white sm:hidden pr-1">{totalCards}</p>
+                <p className="text-base font-bold text-white sm:hidden pr-1">
+                  {totalCards}
+                </p>
               </div>
 
               {/* Mastered */}
@@ -95,11 +120,17 @@ export const DeckList: React.FC<DeckListProps> = ({
                     <CheckCircle2 className="w-4 h-4 shrink-0" />
                   </div>
                   <div>
-                    <p className="text-[11px] font-medium text-emerald-300/80 uppercase tracking-wider">Mastered</p>
-                    <p className="text-base sm:text-lg font-bold text-emerald-400 hidden sm:block">{totalMastered}</p>
+                    <p className="text-[11px] font-medium text-emerald-300/80 uppercase tracking-wider">
+                      Mastered
+                    </p>
+                    <p className="text-base sm:text-lg font-bold text-emerald-400 hidden sm:block">
+                      {totalMastered}
+                    </p>
                   </div>
                 </div>
-                <p className="text-base font-bold text-emerald-400 sm:hidden pr-1">{totalMastered}</p>
+                <p className="text-base font-bold text-emerald-400 sm:hidden pr-1">
+                  {totalMastered}
+                </p>
               </div>
 
               {/* Due For Review */}
@@ -109,11 +140,17 @@ export const DeckList: React.FC<DeckListProps> = ({
                     <Clock className="w-4 h-4 shrink-0" />
                   </div>
                   <div>
-                    <p className="text-[11px] font-medium text-amber-300/80 uppercase tracking-wider">Due For Review</p>
-                    <p className="text-base sm:text-lg font-bold text-amber-400 hidden sm:block">{totalDue}</p>
+                    <p className="text-[11px] font-medium text-amber-300/80 uppercase tracking-wider">
+                      Due For Review
+                    </p>
+                    <p className="text-base sm:text-lg font-bold text-amber-400 hidden sm:block">
+                      {totalDue}
+                    </p>
                   </div>
                 </div>
-                <p className="text-base font-bold text-amber-400 sm:hidden pr-1">{totalDue}</p>
+                <p className="text-base font-bold text-amber-400 sm:hidden pr-1">
+                  {totalDue}
+                </p>
               </div>
             </div>
           </div>
@@ -159,7 +196,8 @@ export const DeckList: React.FC<DeckListProps> = ({
               No Decks Created Yet
             </h3>
             <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-              Create your first deck (for example to learn Italian, French, Spanish, etc.) and start adding flashcards!
+              Create your first deck (for example to learn Italian, French,
+              Spanish, etc.) and start adding flashcards!
             </p>
           </div>
           <button
