@@ -1,6 +1,14 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Play, MoreVertical, Edit2, Trash2, BookOpen, CheckCircle, Clock } from 'lucide-react';
-import { type DeckWithStats } from '../types';
+import React, { useState, useRef, useEffect } from "react";
+import {
+  Play,
+  MoreVertical,
+  Edit2,
+  Trash2,
+  BookOpen,
+  CheckCircle,
+  Clock,
+} from "lucide-react";
+import { type DeckWithStats } from "../types";
 
 interface DeckCardProps {
   deck: DeckWithStats;
@@ -10,13 +18,46 @@ interface DeckCardProps {
   onDelete: (deckId: string) => void;
 }
 
-const COLOR_MAP: Record<string, { bg: string; text: string; lightBg: string; border: string }> = {
-  emerald: { bg: 'bg-emerald-500', text: 'text-emerald-600 dark:text-emerald-400', lightBg: 'bg-emerald-50 dark:bg-emerald-950/40', border: 'border-emerald-200 dark:border-emerald-800' },
-  blue: { bg: 'bg-blue-500', text: 'text-blue-600 dark:text-blue-400', lightBg: 'bg-blue-50 dark:bg-blue-950/40', border: 'border-blue-200 dark:border-blue-800' },
-  indigo: { bg: 'bg-indigo-500', text: 'text-indigo-600 dark:text-indigo-400', lightBg: 'bg-indigo-50 dark:bg-indigo-950/40', border: 'border-indigo-200 dark:border-indigo-800' },
-  purple: { bg: 'bg-purple-500', text: 'text-purple-600 dark:text-purple-400', lightBg: 'bg-purple-50 dark:bg-purple-950/40', border: 'border-purple-200 dark:border-purple-800' },
-  rose: { bg: 'bg-rose-500', text: 'text-rose-600 dark:text-rose-400', lightBg: 'bg-rose-50 dark:bg-rose-950/40', border: 'border-rose-200 dark:border-rose-800' },
-  amber: { bg: 'bg-amber-500', text: 'text-amber-600 dark:text-amber-400', lightBg: 'bg-amber-50 dark:bg-amber-950/40', border: 'border-amber-200 dark:border-amber-800' },
+const COLOR_MAP: Record<
+  string,
+  { bg: string; text: string; lightBg: string; border: string }
+> = {
+  emerald: {
+    bg: "bg-emerald-500",
+    text: "text-emerald-600 dark:text-emerald-400",
+    lightBg: "bg-emerald-50 dark:bg-emerald-950/40",
+    border: "border-emerald-200 dark:border-emerald-800",
+  },
+  blue: {
+    bg: "bg-blue-500",
+    text: "text-blue-600 dark:text-blue-400",
+    lightBg: "bg-blue-50 dark:bg-blue-950/40",
+    border: "border-blue-200 dark:border-blue-800",
+  },
+  indigo: {
+    bg: "bg-indigo-500",
+    text: "text-indigo-600 dark:text-indigo-400",
+    lightBg: "bg-indigo-50 dark:bg-indigo-950/40",
+    border: "border-indigo-200 dark:border-indigo-800",
+  },
+  purple: {
+    bg: "bg-purple-500",
+    text: "text-purple-600 dark:text-purple-400",
+    lightBg: "bg-purple-50 dark:bg-purple-950/40",
+    border: "border-purple-200 dark:border-purple-800",
+  },
+  rose: {
+    bg: "bg-rose-500",
+    text: "text-rose-600 dark:text-rose-400",
+    lightBg: "bg-rose-50 dark:bg-rose-950/40",
+    border: "border-rose-200 dark:border-rose-800",
+  },
+  amber: {
+    bg: "bg-amber-500",
+    text: "text-amber-600 dark:text-amber-400",
+    lightBg: "bg-amber-50 dark:bg-amber-950/40",
+    border: "border-amber-200 dark:border-amber-800",
+  },
 };
 
 export const DeckCard: React.FC<DeckCardProps> = ({
@@ -38,24 +79,26 @@ export const DeckCard: React.FC<DeckCardProps> = ({
       }
     };
     if (menuOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener("mousedown", handleClickOutside);
     }
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [menuOpen]);
 
-  const masteredPercent = deck.totalCards > 0 ? (deck.masteredCount / deck.totalCards) * 100 : 0;
-  const learningPercent = deck.totalCards > 0 ? ((deck.learningCount + deck.reviewCount) / deck.totalCards) * 100 : 0;
+  const masteredPercent =
+    deck.totalCards > 0 ? (deck.masteredCount / deck.totalCards) * 100 : 0;
+  const learningPercent =
+    deck.totalCards > 0
+      ? ((deck.learningCount + deck.reviewCount) / deck.totalCards) * 100
+      : 0;
 
   return (
     <div className="group relative bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-xl hover:border-slate-300 dark:hover:border-slate-700 transition-all duration-300 flex flex-col justify-between overflow-hidden">
-      {/* Top Color Accent Line */}
       <div className={`h-1.5 w-full ${theme.bg}`} />
 
       <div className="p-5 flex-1 flex flex-col justify-between">
         <div>
-          {/* Header & Badges */}
           <div className="flex items-start justify-between gap-2 mb-3">
             <div className="flex items-center gap-2 flex-wrap">
               <span className="text-[11px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700">
@@ -66,7 +109,6 @@ export const DeckCard: React.FC<DeckCardProps> = ({
               </span>
             </div>
 
-            {/* Menu */}
             <div className="relative" ref={menuRef}>
               <button
                 onClick={(e) => {
@@ -97,7 +139,12 @@ export const DeckCard: React.FC<DeckCardProps> = ({
                     onClick={(e) => {
                       e.stopPropagation();
                       setMenuOpen(false);
-                      if (deck.id && confirm(`Are you sure you want to delete deck "${deck.title}" and all its ${deck.totalCards} cards?`)) {
+                      if (
+                        deck.id &&
+                        confirm(
+                          `Are you sure you want to delete deck "${deck.title}" and all its ${deck.totalCards} cards?`,
+                        )
+                      ) {
                         onDelete(deck.id);
                       }
                     }}
@@ -111,7 +158,6 @@ export const DeckCard: React.FC<DeckCardProps> = ({
             </div>
           </div>
 
-          {/* Title & Description */}
           <div
             onClick={() => onSelect(deck)}
             className="cursor-pointer group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors"
@@ -127,29 +173,32 @@ export const DeckCard: React.FC<DeckCardProps> = ({
           </div>
         </div>
 
-        {/* Stats & Progress */}
         <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800/80 space-y-3">
-          {/* Card Counts */}
           <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
             <span className="flex items-center gap-1 font-semibold text-slate-700 dark:text-slate-300">
               <BookOpen className="w-5 h-5" />
-              {deck.totalCards} card{deck.totalCards === 1 ? '' : 's'}
+              {deck.totalCards} card{deck.totalCards === 1 ? "" : "s"}
             </span>
             <div className="flex items-center gap-2 text-[11px]">
               {deck.masteredCount > 0 && (
-                <span className="text-emerald-600 dark:text-emerald-400 flex items-center gap-0.5" title="Mastered">
+                <span
+                  className="text-emerald-600 dark:text-emerald-400 flex items-center gap-0.5"
+                  title="Mastered"
+                >
                   <CheckCircle className="w-3 h-3" /> {deck.masteredCount}
                 </span>
               )}
               {deck.dueCount > 0 && (
-                <span className="text-amber-600 dark:text-amber-400 flex items-center gap-0.5 font-medium" title="Due for review">
+                <span
+                  className="text-amber-600 dark:text-amber-400 flex items-center gap-0.5 font-medium"
+                  title="Due for review"
+                >
                   <Clock className="w-3 h-3" /> {deck.dueCount} due
                 </span>
               )}
             </div>
           </div>
 
-          {/* Progress Bar */}
           {deck.totalCards > 0 ? (
             <div className="w-full h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden flex">
               <div
@@ -164,10 +213,11 @@ export const DeckCard: React.FC<DeckCardProps> = ({
               />
             </div>
           ) : (
-            <div className="text-[11px] text-slate-400 italic">No cards added yet</div>
+            <div className="text-[11px] text-slate-400 italic">
+              No cards added yet
+            </div>
           )}
 
-          {/* Actions */}
           <div className="flex items-center gap-2 pt-1">
             <button
               onClick={() => onSelect(deck)}

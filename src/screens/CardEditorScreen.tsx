@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Sparkles, Loader2 } from 'lucide-react';
-import { getDeckById, getCardById, createCard, updateCard } from '../db';
-import { type DeckWithStats, type Card } from '../types';
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { ArrowLeft, Sparkles, Loader2 } from "lucide-react";
+import { getDeckById, getCardById, createCard, updateCard } from "../db";
+import { type DeckWithStats, type Card } from "../types";
 
 export const CardEditorScreen: React.FC = () => {
   const { deckId, cardId } = useParams<{ deckId: string; cardId?: string }>();
@@ -10,16 +10,15 @@ export const CardEditorScreen: React.FC = () => {
 
   const [deck, setDeck] = useState<DeckWithStats | null>(null);
   const [existingCard, setExistingCard] = useState<Card | null>(null);
-  const [front, setFront] = useState('');
-  const [back, setBack] = useState('');
-  const [notes, setNotes] = useState('');
+  const [front, setFront] = useState("");
+  const [back, setBack] = useState("");
+  const [notes, setNotes] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   const isEditing = Boolean(cardId);
 
-  // Load deck & existing card if editing
   useEffect(() => {
     let isMounted = true;
 
@@ -38,11 +37,11 @@ export const CardEditorScreen: React.FC = () => {
             setExistingCard(card);
             setFront(card.front);
             setBack(card.back);
-            setNotes(card.notes || '');
+            setNotes(card.notes || "");
           }
         }
       } catch (err) {
-        console.error('Failed to load card editor data:', err);
+        console.error("Failed to load card editor data:", err);
       } finally {
         if (isMounted) setIsLoading(false);
       }
@@ -69,7 +68,7 @@ export const CardEditorScreen: React.FC = () => {
 
     try {
       setIsSubmitting(true);
-      setError('');
+      setError("");
 
       if (isEditing && existingCard) {
         await updateCard(existingCard.id, {
@@ -82,13 +81,14 @@ export const CardEditorScreen: React.FC = () => {
           deckId,
           front.trim(),
           back.trim(),
-          notes.trim() || undefined
+          notes.trim() || undefined,
         );
       }
 
       navigate(`/decks/${deckId}`);
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to save flashcard.';
+      const errorMessage =
+        err instanceof Error ? err.message : "Failed to save flashcard.";
       setError(errorMessage);
     } finally {
       setIsSubmitting(false);
@@ -103,12 +103,11 @@ export const CardEditorScreen: React.FC = () => {
     );
   }
 
-  const targetLang = deck?.targetLanguage || 'Target Word';
-  const nativeLang = deck?.nativeLanguage || 'Translation';
+  const targetLang = deck?.targetLanguage || "Target Word";
+  const nativeLang = deck?.nativeLanguage || "Translation";
 
   return (
     <div className="flex-1 flex flex-col -mx-4 sm:mx-0">
-      {/* Top Header with Notch Clearance */}
       <header className="sticky top-0 z-30 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md sm:backdrop-blur-none border-b border-slate-200 dark:border-slate-800 header-safe-top pb-3 px-4 sm:px-0 sm:border-0 sm:bg-transparent sm:dark:bg-transparent sm:static">
         <div className="flex items-center justify-between max-w-xl mx-auto">
           <div className="flex items-center gap-3">
@@ -122,7 +121,7 @@ export const CardEditorScreen: React.FC = () => {
             </button>
             <div>
               <h1 className="text-lg sm:text-2xl font-heading font-bold text-slate-900 dark:text-white">
-                {isEditing ? 'Edit Flashcard' : 'Add Flashcard'}
+                {isEditing ? "Edit Flashcard" : "Add Flashcard"}
               </h1>
               {deck && (
                 <p className="text-xs text-slate-500 dark:text-slate-400">
@@ -134,7 +133,6 @@ export const CardEditorScreen: React.FC = () => {
         </div>
       </header>
 
-      {/* Form Content */}
       <div className="flex-1 max-w-xl w-full mx-auto p-4 sm:p-0 sm:my-6 pb-safe">
         <form
           onSubmit={handleSubmit}
@@ -146,9 +144,11 @@ export const CardEditorScreen: React.FC = () => {
             </div>
           )}
 
-          {/* Front Word */}
           <div>
-            <label htmlFor="front-input" className="flex text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5 items-center justify-between">
+            <label
+              htmlFor="front-input"
+              className="flex text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5 items-center justify-between"
+            >
               <span>Card Front ({targetLang}) *</span>
               <span className="text-[10px] text-brand-600 dark:text-brand-400 font-normal">
                 Prompt during review
@@ -166,9 +166,11 @@ export const CardEditorScreen: React.FC = () => {
             />
           </div>
 
-          {/* Back Translation */}
           <div>
-            <label htmlFor="back-input" className="block text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">
+            <label
+              htmlFor="back-input"
+              className="block text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5"
+            >
               Card Back ({nativeLang}) *
             </label>
             <input
@@ -182,9 +184,11 @@ export const CardEditorScreen: React.FC = () => {
             />
           </div>
 
-          {/* Notes / Example */}
           <div>
-            <label htmlFor="notes-input" className="flex text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5 items-center gap-1.5">
+            <label
+              htmlFor="notes-input"
+              className="flex text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5 items-center gap-1.5"
+            >
               <span>Context & Notes (Optional)</span>
               <Sparkles className="w-5 h-5 text-amber-500" />
             </label>
@@ -198,7 +202,6 @@ export const CardEditorScreen: React.FC = () => {
             />
           </div>
 
-          {/* Actions */}
           <div className="pt-4 flex items-center justify-end gap-3 border-t border-slate-100 dark:border-slate-800">
             <button
               type="button"
@@ -213,7 +216,13 @@ export const CardEditorScreen: React.FC = () => {
               className="px-6 py-2.5 text-sm font-medium text-white bg-brand-600 hover:bg-brand-500 rounded-xl shadow-md shadow-brand-600/20 disabled:opacity-50 transition-all flex items-center gap-2"
             >
               {isSubmitting && <Loader2 className="w-5 h-5 animate-spin" />}
-              <span>{isSubmitting ? 'Saving...' : isEditing ? 'Update Card' : 'Save Card'}</span>
+              <span>
+                {isSubmitting
+                  ? "Saving..."
+                  : isEditing
+                    ? "Update Card"
+                    : "Save Card"}
+              </span>
             </button>
           </div>
         </form>

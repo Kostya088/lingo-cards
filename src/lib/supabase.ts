@@ -15,7 +15,6 @@ export const isSupabaseConfigured = (): boolean => {
   );
 };
 
-// Returns null if environment variables are not configured, enabling 100% offline guest mode
 export const supabase: SupabaseClient | null = isSupabaseConfigured()
   ? createClient(supabaseUrl!, supabaseAnonKey!)
   : null;

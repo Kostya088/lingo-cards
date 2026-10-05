@@ -52,7 +52,6 @@ export const CardList: React.FC<CardListProps> = ({
             key={card.id}
             className="p-3.5 sm:p-4 hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition-colors space-y-2"
           >
-            {/* Top line: Badges on left, Action buttons on right */}
             <div className="flex items-center justify-between gap-2">
               <div className="flex items-center gap-1.5 flex-wrap">
                 <span
@@ -67,7 +66,6 @@ export const CardList: React.FC<CardListProps> = ({
                 )}
               </div>
 
-              {/* Action Buttons */}
               <div className="flex items-center gap-1 shrink-0">
                 <button
                   onClick={() => onEditCard(card)}
@@ -86,7 +84,6 @@ export const CardList: React.FC<CardListProps> = ({
               </div>
             </div>
 
-            {/* Underneath: Word and Translation */}
             <div className="flex flex-wrap items-baseline gap-x-2.5 gap-y-0.5">
               <span className="font-bold text-sm sm:text-base text-slate-900 dark:text-white break-words">
                 {card.front}
@@ -97,7 +94,6 @@ export const CardList: React.FC<CardListProps> = ({
               </span>
             </div>
 
-            {/* Optional notes */}
             {card.notes && (
               <p className="text-xs text-slate-400 dark:text-slate-500 italic line-clamp-2 pt-0.5">
                 &ldquo;{card.notes}&rdquo;

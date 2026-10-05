@@ -1,6 +1,11 @@
-import React from 'react';
-import { X, ArrowRight, Sparkles } from 'lucide-react';
-import { type DeckWithStats, type Card, type StudyDirection, type StudyFilter } from '../types';
+import React from "react";
+import { X, ArrowRight, Sparkles } from "lucide-react";
+import {
+  type DeckWithStats,
+  type Card,
+  type StudyDirection,
+  type StudyFilter,
+} from "../types";
 
 interface StudyConfigPanelProps {
   deck: DeckWithStats;
@@ -32,13 +37,15 @@ export const StudyConfigPanel: React.FC<StudyConfigPanelProps> = ({
   return (
     <div className="w-full max-w-xl mx-auto space-y-4 sm:space-y-6 animate-fade-in">
       <div className="bg-white dark:bg-slate-900 rounded-2xl sm:rounded-3xl border border-slate-200 dark:border-slate-800 p-4 sm:p-7 shadow-xl space-y-5 sm:space-y-6">
-        {/* Header */}
         <div className="flex items-start justify-between border-b border-slate-100 dark:border-slate-800 pb-4 gap-2.5">
           <div className="min-w-0 flex-1">
             <span className="inline-block text-[10px] sm:text-[11px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700">
               {deck.targetLanguage} &rarr; {deck.nativeLanguage}
             </span>
-            <h1 className="text-xl sm:text-2xl font-heading font-bold text-slate-900 dark:text-white mt-1 truncate" title={deck.title}>
+            <h1
+              className="text-xl sm:text-2xl font-heading font-bold text-slate-900 dark:text-white mt-1 truncate"
+              title={deck.title}
+            >
               Study: {deck.title}
             </h1>
           </div>
@@ -52,7 +59,6 @@ export const StudyConfigPanel: React.FC<StudyConfigPanelProps> = ({
           </button>
         </div>
 
-        {/* Direction Toggle */}
         <div className="space-y-2">
           <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
             Study Direction
@@ -60,11 +66,11 @@ export const StudyConfigPanel: React.FC<StudyConfigPanelProps> = ({
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
             <button
               type="button"
-              onClick={() => onDirectionChange('front-to-back')}
+              onClick={() => onDirectionChange("front-to-back")}
               className={`p-3 sm:p-3.5 rounded-xl sm:rounded-2xl border text-left transition-all ${
-                direction === 'front-to-back'
-                  ? 'border-slate-900 dark:border-slate-400 bg-slate-100/90 dark:bg-slate-800 text-slate-900 dark:text-white ring-2 ring-slate-900/10 dark:ring-slate-400/20 shadow-sm'
-                  : 'border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 text-slate-600 dark:text-slate-400'
+                direction === "front-to-back"
+                  ? "border-slate-900 dark:border-slate-400 bg-slate-100/90 dark:bg-slate-800 text-slate-900 dark:text-white ring-2 ring-slate-900/10 dark:ring-slate-400/20 shadow-sm"
+                  : "border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 text-slate-600 dark:text-slate-400"
               }`}
             >
               <p className="text-xs font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
@@ -79,11 +85,11 @@ export const StudyConfigPanel: React.FC<StudyConfigPanelProps> = ({
 
             <button
               type="button"
-              onClick={() => onDirectionChange('back-to-front')}
+              onClick={() => onDirectionChange("back-to-front")}
               className={`p-3 sm:p-3.5 rounded-xl sm:rounded-2xl border text-left transition-all ${
-                direction === 'back-to-front'
-                  ? 'border-slate-900 dark:border-slate-400 bg-slate-100/90 dark:bg-slate-800 text-slate-900 dark:text-white ring-2 ring-slate-900/10 dark:ring-slate-400/20 shadow-sm'
-                  : 'border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 text-slate-600 dark:text-slate-400'
+                direction === "back-to-front"
+                  ? "border-slate-900 dark:border-slate-400 bg-slate-100/90 dark:bg-slate-800 text-slate-900 dark:text-white ring-2 ring-slate-900/10 dark:ring-slate-400/20 shadow-sm"
+                  : "border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 text-slate-600 dark:text-slate-400"
               }`}
             >
               <p className="text-xs font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
@@ -98,7 +104,6 @@ export const StudyConfigPanel: React.FC<StudyConfigPanelProps> = ({
           </div>
         </div>
 
-        {/* Cards Filter */}
         <div className="space-y-2">
           <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
             Cards to Include
@@ -106,20 +111,22 @@ export const StudyConfigPanel: React.FC<StudyConfigPanelProps> = ({
           <div className="space-y-2">
             <label
               className={`flex items-center justify-between gap-2 p-3 rounded-xl border cursor-pointer transition-all ${
-                filter === 'all'
-                  ? 'border-slate-900 dark:border-slate-400 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white'
-                  : 'border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400'
+                filter === "all"
+                  ? "border-slate-900 dark:border-slate-400 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white"
+                  : "border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400"
               }`}
             >
               <div className="flex items-center gap-2.5 min-w-0 flex-1">
                 <input
                   type="radio"
                   name="studyFilter"
-                  checked={filter === 'all'}
-                  onChange={() => onFilterChange('all')}
+                  checked={filter === "all"}
+                  onChange={() => onFilterChange("all")}
                   className="text-slate-900 dark:text-white focus:ring-slate-500 shrink-0"
                 />
-                <span className="text-xs font-medium truncate">All Cards in Deck</span>
+                <span className="text-xs font-medium truncate">
+                  All Cards in Deck
+                </span>
               </div>
               <span className="text-xs font-bold text-slate-500 dark:text-slate-400 shrink-0">
                 {allCards.length} cards
@@ -128,42 +135,54 @@ export const StudyConfigPanel: React.FC<StudyConfigPanelProps> = ({
 
             <label
               className={`flex items-center justify-between gap-2 p-3 rounded-xl border cursor-pointer transition-all ${
-                filter === 'needs-review'
-                  ? 'border-slate-900 dark:border-slate-400 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white'
-                  : 'border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400'
+                filter === "needs-review"
+                  ? "border-slate-900 dark:border-slate-400 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white"
+                  : "border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400"
               }`}
             >
               <div className="flex items-center gap-2.5 min-w-0 flex-1">
                 <input
                   type="radio"
                   name="studyFilter"
-                  checked={filter === 'needs-review'}
-                  onChange={() => onFilterChange('needs-review')}
+                  checked={filter === "needs-review"}
+                  onChange={() => onFilterChange("needs-review")}
                   className="text-slate-900 dark:text-white focus:ring-slate-500 shrink-0"
                 />
-                <span className="text-xs font-medium leading-tight">Needs Review / Due</span>
+                <span className="text-xs font-medium leading-tight">
+                  Needs Review / Due
+                </span>
               </div>
               <span className="text-xs font-bold text-amber-600 dark:text-amber-400 shrink-0">
-                {allCards.filter((c) => c.level === 0 || c.level === 1 || c.nextReviewDate <= Date.now()).length} cards
+                {
+                  allCards.filter(
+                    (c) =>
+                      c.level === 0 ||
+                      c.level === 1 ||
+                      c.nextReviewDate <= Date.now(),
+                  ).length
+                }{" "}
+                cards
               </span>
             </label>
 
             <label
               className={`flex items-center justify-between gap-2 p-3 rounded-xl border cursor-pointer transition-all ${
-                filter === 'unmastered'
-                  ? 'border-slate-900 dark:border-slate-400 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white'
-                  : 'border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400'
+                filter === "unmastered"
+                  ? "border-slate-900 dark:border-slate-400 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white"
+                  : "border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400"
               }`}
             >
               <div className="flex items-center gap-2.5 min-w-0 flex-1">
                 <input
                   type="radio"
                   name="studyFilter"
-                  checked={filter === 'unmastered'}
-                  onChange={() => onFilterChange('unmastered')}
+                  checked={filter === "unmastered"}
+                  onChange={() => onFilterChange("unmastered")}
                   className="text-slate-900 dark:text-white focus:ring-slate-500 shrink-0"
                 />
-                <span className="text-xs font-medium leading-tight">Unmastered Words</span>
+                <span className="text-xs font-medium leading-tight">
+                  Unmastered Words
+                </span>
               </div>
               <span className="text-xs font-bold text-slate-500 dark:text-slate-400 shrink-0">
                 {allCards.filter((c) => c.level < 3).length} cards
@@ -172,7 +191,6 @@ export const StudyConfigPanel: React.FC<StudyConfigPanelProps> = ({
           </div>
         </div>
 
-        {/* Shuffle Option */}
         <div className="flex items-center justify-between text-xs text-slate-700 dark:text-slate-300 pt-2 border-t border-slate-100 dark:border-slate-800">
           <span className="font-semibold">Shuffle card order</span>
           <input
@@ -183,7 +201,6 @@ export const StudyConfigPanel: React.FC<StudyConfigPanelProps> = ({
           />
         </div>
 
-        {/* Start CTA */}
         <div className="pt-3 flex flex-col-reverse sm:flex-row items-center justify-end gap-2.5 sm:gap-3 border-t border-slate-100 dark:border-slate-800">
           <button
             onClick={onExit}

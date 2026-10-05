@@ -7,12 +7,15 @@ A clean, modern, local-first flashcards web application built with **React**, **
 ## 🚀 Getting Started
 
 ### 1. Run Development Server
+
 ```bash
 npm run dev
 ```
+
 Open your browser at `http://localhost:3000` (or the port displayed in your terminal).
 
 ### 2. Build for Production
+
 ```bash
 npm run build
 ```
@@ -39,7 +42,6 @@ npm run build
   - **Quick Bulk Add**: Paste multi-line vocabulary lists (`ciao - hello`, `merci : thank you`, etc.) with live preview.
 - **Local-First & Portable**:
   - 100% offline browser storage using IndexedDB.
-  - Export/Import JSON backups for safe keeping and sharing.
 - **Keyboard Shortcuts**:
   - `Space` / `Enter`: Flip card
   - `1`: Rate Bad (Forgot / Re-queue)

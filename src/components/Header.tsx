@@ -25,7 +25,6 @@ export const Header: React.FC<HeaderProps> = ({
   const { user, syncStatus } = useAuth();
   const location = useLocation();
 
-  // Hide Header on mobile for focused sub-screens that provide their own native back headers
   const isSubScreen =
     location.pathname.startsWith("/decks/new") ||
     location.pathname.includes("/edit") ||
@@ -42,7 +41,6 @@ export const Header: React.FC<HeaderProps> = ({
       }`}
     >
       <div className="max-w-6xl mx-auto px-3 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-        {/* Brand */}
         <Link
           to="/"
           className="flex items-center gap-2 group text-left focus:outline-none shrink-0"
@@ -62,9 +60,7 @@ export const Header: React.FC<HeaderProps> = ({
           </div>
         </Link>
 
-        {/* Right Actions */}
         <div className="flex items-center gap-1.5 sm:gap-2">
-          {/* Cloud Sync / Profile Button */}
           {user ? (
             <Link
               to="/profile"
@@ -94,7 +90,6 @@ export const Header: React.FC<HeaderProps> = ({
             </Link>
           )}
 
-          {/* Theme Toggle */}
           <button
             onClick={onToggleDarkMode}
             className="p-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors border border-slate-200/80 dark:border-slate-700/80"

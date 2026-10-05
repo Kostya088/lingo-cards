@@ -1,4 +1,4 @@
-import { type Card, type Rating, type MasteryLevel } from '../types';
+import { type Card, type Rating, type MasteryLevel } from "../types";
 
 export interface ReviewResult {
   level: MasteryLevel;
@@ -17,14 +17,12 @@ export function calculateNextReview(card: Card, rating: Rating): ReviewResult {
   let easeFactor = card.easeFactor || 2.5;
   let level: MasteryLevel = card.level;
 
-  if (rating === 'bad') {
-    // Reset streak on failure
+  if (rating === "bad") {
     consecutiveCorrect = 0;
     intervalDays = 0;
-    // Lower ease factor (minimum 1.3)
+
     easeFactor = Math.max(1.3, easeFactor - 0.2);
-    level = 1; // Mark as Learning / Needs practice
-    // Due again soon (same day / 10 mins)
+    level = 1;
     const nextReviewDate = now + 10 * 60 * 1000;
 
     return {
@@ -38,17 +36,14 @@ export function calculateNextReview(card: Card, rating: Rating): ReviewResult {
     };
   }
 
-  if (rating === 'medium') {
-    // Retained, but with difficulty
+  if (rating === "medium") {
     consecutiveCorrect = Math.max(1, consecutiveCorrect);
     if (intervalDays === 0) {
       intervalDays = 1;
     } else {
       intervalDays = Math.max(1, Math.round(intervalDays * 1.3));
     }
-    // Slight ease penalty
     easeFactor = Math.max(1.3, easeFactor - 0.08);
-    // Level stays at least 1 or 2
     level = card.level === 0 ? 1 : card.level === 3 ? 2 : card.level;
     const nextReviewDate = now + intervalDays * 24 * 60 * 60 * 1000;
 
@@ -63,7 +58,6 @@ export function calculateNextReview(card: Card, rating: Rating): ReviewResult {
     };
   }
 
-  // rating === 'good'
   consecutiveCorrect += 1;
   if (consecutiveCorrect === 1) {
     intervalDays = 1;
@@ -73,14 +67,12 @@ export function calculateNextReview(card: Card, rating: Rating): ReviewResult {
     intervalDays = Math.max(4, Math.round((intervalDays || 3) * easeFactor));
   }
 
-  // Reward ease factor (up to 3.0)
   easeFactor = Math.min(3.0, easeFactor + 0.1);
 
-  // Promote to Mastered if 3+ consecutive correct or >= 10 day interval
   if (consecutiveCorrect >= 3 || intervalDays >= 10) {
-    level = 3; // Mastered
+    level = 3;
   } else {
-    level = 2; // In Review
+    level = 2;
   }
 
   const nextReviewDate = now + intervalDays * 24 * 60 * 60 * 1000;

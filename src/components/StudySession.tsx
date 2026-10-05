@@ -1,14 +1,17 @@
-import React, { useEffect } from 'react';
-import { type DeckWithStats, type Card, type SessionStats } from '../types';
-import { useStudyQueue } from '../hooks/useStudyQueue';
-import { StudyConfigPanel } from './StudyConfigPanel';
-import { StudyCardView } from './StudyCardView';
+import React, { useEffect } from "react";
+import { type DeckWithStats, type Card, type SessionStats } from "../types";
+import { useStudyQueue } from "../hooks/useStudyQueue";
+import { StudyConfigPanel } from "./StudyConfigPanel";
+import { StudyCardView } from "./StudyCardView";
 
 interface StudySessionProps {
   deck: DeckWithStats;
   allCards: Card[];
   onExit: () => void;
-  onSessionComplete: (stats: SessionStats, retryDifficultCards: () => void) => void;
+  onSessionComplete: (
+    stats: SessionStats,
+    retryDifficultCards: () => void,
+  ) => void;
   onStateChange?: (isConfiguring: boolean) => void;
 }
 
@@ -21,47 +24,47 @@ export const StudySession: React.FC<StudySessionProps> = ({
 }) => {
   const [state, actions] = useStudyQueue(deck, allCards, onSessionComplete);
 
-  // Notify parent of config/active phase transitions
   useEffect(() => {
     onStateChange?.(state.isConfiguring);
   }, [state.isConfiguring, onStateChange]);
 
-  // Keyboard Shortcuts Listener
   useEffect(() => {
     if (state.isConfiguring) return;
 
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Don't trigger if user is in an input
-      if (['input', 'textarea'].includes((e.target as HTMLElement)?.tagName?.toLowerCase())) {
+      if (
+        ["input", "textarea"].includes(
+          (e.target as HTMLElement)?.tagName?.toLowerCase(),
+        )
+      ) {
         return;
       }
 
-      if (e.code === 'Space' || e.key === 'Enter') {
+      if (e.code === "Space" || e.key === "Enter") {
         e.preventDefault();
         actions.flip();
       } else if (state.isFlipped) {
-        if (e.key === '1') {
+        if (e.key === "1") {
           e.preventDefault();
-          actions.rate('bad');
-        } else if (e.key === '2') {
+          actions.rate("bad");
+        } else if (e.key === "2") {
           e.preventDefault();
-          actions.rate('medium');
-        } else if (e.key === '3') {
+          actions.rate("medium");
+        } else if (e.key === "3") {
           e.preventDefault();
-          actions.rate('good');
+          actions.rate("good");
         }
       }
 
-      if (e.key === 'Escape') {
+      if (e.key === "Escape") {
         onExit();
       }
     };
 
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, [state.isConfiguring, state.isFlipped, actions, onExit]);
 
-  // CONFIGURATION SCREEN (Before starting)
   if (state.isConfiguring) {
     return (
       <StudyConfigPanel
@@ -80,10 +83,8 @@ export const StudySession: React.FC<StudySessionProps> = ({
     );
   }
 
-  // Determine the fallback card for the back-face logic
   const activeBackCard = state.backCard || state.currentCard;
 
-  // ACTIVE STUDY CARD VIEW
   return (
     <StudyCardView
       deckTitle={deck.title}
@@ -97,8 +98,8 @@ export const StudySession: React.FC<StudySessionProps> = ({
       backNotes={state.backNotes}
       frontLangLabel={state.frontLangLabel}
       backLangLabel={state.backLangLabel}
-      activeFrontWord={activeBackCard?.front || ''}
-      activeBackWord={activeBackCard?.back || ''}
+      activeFrontWord={activeBackCard?.front || ""}
+      activeBackWord={activeBackCard?.back || ""}
       direction={state.direction}
       onFlip={actions.flip}
       onRate={actions.rate}

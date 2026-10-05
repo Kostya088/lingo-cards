@@ -1,5 +1,5 @@
-import { Component, type ErrorInfo, type ReactNode } from 'react';
-import { AlertTriangle, RefreshCw } from 'lucide-react';
+import { Component, type ErrorInfo, type ReactNode } from "react";
+import { AlertTriangle, RefreshCw } from "lucide-react";
 
 interface Props {
   children?: ReactNode;
@@ -21,13 +21,12 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error('Uncaught rendering error:', error, errorInfo);
+    console.error("Uncaught rendering error:", error, errorInfo);
   }
 
   private handleReset = () => {
     this.setState({ hasError: false, error: null });
-    // A full page reload to the home screen is the safest way to clear corrupted state
-    window.location.href = '/'; 
+    window.location.href = "/";
   };
 
   public render() {
@@ -41,7 +40,8 @@ export class ErrorBoundary extends Component<Props, State> {
             Something went wrong
           </h2>
           <p className="text-sm text-slate-500 dark:text-slate-400 max-w-md mb-8">
-            {this.state.error?.message || 'An unexpected error occurred while loading this screen.'}
+            {this.state.error?.message ||
+              "An unexpected error occurred while loading this screen."}
           </p>
           <button
             onClick={this.handleReset}

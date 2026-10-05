@@ -1,16 +1,25 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Mail, Lock, Sparkles, AlertCircle, Loader2, CheckCircle2, ArrowLeft, User } from 'lucide-react';
-import { useAuth } from '../context/AuthContext';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import {
+  Mail,
+  Lock,
+  Sparkles,
+  AlertCircle,
+  Loader2,
+  CheckCircle2,
+  ArrowLeft,
+  User,
+} from "lucide-react";
+import { useAuth } from "../context/AuthContext";
 
 export const AuthScreen: React.FC = () => {
   const navigate = useNavigate();
   const { signIn, signUp } = useAuth();
 
-  const [mode, setMode] = useState<'signin' | 'signup'>('signin');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [displayName, setDisplayName] = useState('');
+  const [mode, setMode] = useState<"signin" | "signup">("signin");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [displayName, setDisplayName] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
@@ -21,44 +30,48 @@ export const AuthScreen: React.FC = () => {
     setSuccessMessage(null);
 
     if (!email.trim() || !password.trim()) {
-      setErrorMessage('Please fill in both email and password.');
+      setErrorMessage("Please fill in both email and password.");
       return;
     }
 
-    if (mode === 'signup' && !displayName.trim()) {
-      setErrorMessage('Please provide a display name.');
+    if (mode === "signup" && !displayName.trim()) {
+      setErrorMessage("Please provide a display name.");
       return;
     }
 
     if (password.length < 6) {
-      setErrorMessage('Password must be at least 6 characters long.');
+      setErrorMessage("Password must be at least 6 characters long.");
       return;
     }
 
     setIsSubmitting(true);
     try {
-      if (mode === 'signin') {
+      if (mode === "signin") {
         const { error } = await signIn(email.trim(), password);
         if (error) {
           setErrorMessage(error.message);
         } else {
-          navigate('/');
+          navigate("/");
         }
       } else {
-        const { error } = await signUp(email.trim(), password, displayName.trim());
+        const { error } = await signUp(
+          email.trim(),
+          password,
+          displayName.trim(),
+        );
         if (error) {
           setErrorMessage(error.message);
         } else {
           setSuccessMessage(
-            'Account created successfully! If email confirmation is enabled, please check your inbox.'
+            "Account created successfully! If email confirmation is enabled, please check your inbox.",
           );
           setTimeout(() => {
-            navigate('/');
+            navigate("/");
           }, 1500);
         }
       }
     } catch (err: any) {
-      setErrorMessage(err.message || 'An unexpected error occurred.');
+      setErrorMessage(err.message || "An unexpected error occurred.");
     } finally {
       setIsSubmitting(false);
     }
@@ -66,7 +79,6 @@ export const AuthScreen: React.FC = () => {
 
   return (
     <div className="flex-1 flex flex-col -mx-4 sm:mx-0">
-      {/* Top Header with Notch Clearance */}
       <header className="sticky top-0 z-30 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md sm:backdrop-blur-none border-b border-slate-200 dark:border-slate-800 header-safe-top pb-3 px-4 sm:px-0 sm:border-0 sm:bg-transparent sm:dark:bg-transparent sm:static">
         <div className="flex items-center justify-between max-w-md mx-auto">
           <button
@@ -81,37 +93,34 @@ export const AuthScreen: React.FC = () => {
         </div>
       </header>
 
-      {/* Auth Card */}
       <div className="flex-1 max-w-md w-full mx-auto p-4 sm:p-0 sm:my-8">
         <div className="bg-white dark:bg-slate-900 sm:rounded-2xl sm:border sm:border-slate-200 sm:dark:border-slate-800 sm:shadow-sm p-6 sm:p-8 space-y-6">
-          {/* Brand Icon & Heading */}
           <div className="text-center">
             <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-brand-50 dark:bg-brand-950/60 text-brand-600 dark:text-brand-400 mb-3 shadow-inner">
               <Sparkles className="w-6 h-6" />
             </div>
             <h1 className="text-2xl font-heading font-bold text-slate-900 dark:text-slate-100">
-              {mode === 'signin' ? 'Welcome Back' : 'Create an Account'}
+              {mode === "signin" ? "Welcome Back" : "Create an Account"}
             </h1>
             <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-              {mode === 'signin'
-                ? 'Sign in to access your synchronized decks from any device.'
-                : 'Sign up to automatically back up and sync your flashcards.'}
+              {mode === "signin"
+                ? "Sign in to access your synchronized decks from any device."
+                : "Sign up to automatically back up and sync your flashcards."}
             </p>
           </div>
 
-          {/* Mode Switcher Tabs */}
           <div className="grid grid-cols-2 p-1 bg-slate-100 dark:bg-slate-800/80 rounded-xl">
             <button
               type="button"
               onClick={() => {
-                setMode('signin');
+                setMode("signin");
                 setErrorMessage(null);
                 setSuccessMessage(null);
               }}
               className={`py-2 text-sm font-semibold rounded-lg transition-all ${
-                mode === 'signin'
-                  ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm'
-                  : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                mode === "signin"
+                  ? "bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm"
+                  : "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
               }`}
             >
               Sign In
@@ -119,21 +128,20 @@ export const AuthScreen: React.FC = () => {
             <button
               type="button"
               onClick={() => {
-                setMode('signup');
+                setMode("signup");
                 setErrorMessage(null);
                 setSuccessMessage(null);
               }}
               className={`py-2 text-sm font-semibold rounded-lg transition-all ${
-                mode === 'signup'
-                  ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm'
-                  : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                mode === "signup"
+                  ? "bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm"
+                  : "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
               }`}
             >
               Sign Up
             </button>
           </div>
 
-          {/* Notifications */}
           {errorMessage && (
             <div className="p-3.5 bg-rose-50 dark:bg-rose-950/50 border border-rose-200 dark:border-rose-900/50 rounded-xl text-rose-700 dark:text-rose-300 text-sm flex items-start gap-2.5">
               <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" />
@@ -148,9 +156,8 @@ export const AuthScreen: React.FC = () => {
             </div>
           )}
 
-          {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-4">
-            {mode === 'signup' && (
+            {mode === "signup" && (
               <div>
                 <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">
                   Display Name
@@ -159,7 +166,7 @@ export const AuthScreen: React.FC = () => {
                   <User className="absolute left-3.5 top-3.5 w-5 h-5 text-slate-400" />
                   <input
                     type="text"
-                    required={mode === 'signup'}
+                    required={mode === "signup"}
                     placeholder="Your Name"
                     value={displayName}
                     onChange={(e) => setDisplayName(e.target.value)}
@@ -215,7 +222,9 @@ export const AuthScreen: React.FC = () => {
                   <span>Processing...</span>
                 </>
               ) : (
-                <span>{mode === 'signin' ? 'Sign In to Account' : 'Create Account'}</span>
+                <span>
+                  {mode === "signin" ? "Sign In to Account" : "Create Account"}
+                </span>
               )}
             </button>
           </form>

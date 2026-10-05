@@ -1,8 +1,5 @@
-import { supabase } from '../lib/supabase';
-import {
-  type Deck,
-  type Card,
-} from '../types';
+import { supabase } from "../lib/supabase";
+import { type Deck, type Card } from "../types";
 import {
   db,
   getModifiedDecksSince,
@@ -10,7 +7,7 @@ import {
   bulkUpsertDecks,
   bulkUpsertCards,
   linkGuestDataToUser,
-} from '../db';
+} from "../db";
 
 export interface SyncResult {
   success: boolean;
@@ -22,7 +19,6 @@ export interface SyncResult {
   error?: string;
 }
 
-// Convert camelCase Deck model to Postgres snake_case table row
 export function deckToDbRow(deck: Deck, userId: string) {
   return {
     id: deck.id,
@@ -38,7 +34,6 @@ export function deckToDbRow(deck: Deck, userId: string) {
   };
 }
 
-// Convert Postgres snake_case table row to camelCase Deck model
 export function dbRowToDeck(row: any): Deck {
   return {
     id: row.id,
@@ -54,7 +49,6 @@ export function dbRowToDeck(row: any): Deck {
   };
 }
 
-// Convert camelCase Card model to Postgres snake_case table row
 export function cardToDbRow(card: Card, userId: string) {
   return {
     id: card.id,
@@ -76,7 +70,6 @@ export function cardToDbRow(card: Card, userId: string) {
   };
 }
 
-// Convert Postgres snake_case table row to camelCase Card model
 export function dbRowToCard(row: any): Card {
   return {
     id: row.id,
@@ -90,7 +83,9 @@ export function dbRowToCard(row: any): Card {
     intervalDays: row.interval_days,
     easeFactor: Number(row.ease_factor),
     nextReviewDate: Number(row.next_review_date),
-    lastReviewedDate: row.last_reviewed_date ? Number(row.last_reviewed_date) : undefined,
+    lastReviewedDate: row.last_reviewed_date
+      ? Number(row.last_reviewed_date)
+      : undefined,
     totalReviews: row.total_reviews,
     createdAt: Number(row.created_at),
     updatedAt: Number(row.updated_at),
@@ -107,9 +102,6 @@ export function setLastSyncTime(userId: string, timestamp: number): void {
   localStorage.setItem(`lingocards_last_sync_${userId}`, String(timestamp));
 }
 
-/**
- * Bidirectional delta synchronization between local IndexedDB and Supabase PostgreSQL.
- */
 export async function syncWithCloud(userId: string): Promise<SyncResult> {
   if (!supabase) {
     return {
@@ -119,7 +111,7 @@ export async function syncWithCloud(userId: string): Promise<SyncResult> {
       downloadedDecks: 0,
       downloadedCards: 0,
       timestamp: Date.now(),
-      error: 'Supabase client is not configured.',
+      error: "Supabase client is not configured.",
     };
   }
 
@@ -131,7 +123,7 @@ export async function syncWithCloud(userId: string): Promise<SyncResult> {
       downloadedDecks: 0,
       downloadedCards: 0,
       timestamp: Date.now(),
-      error: 'Device is offline.',
+      error: "Device is offline.",
     };
   }
 
@@ -139,21 +131,20 @@ export async function syncWithCloud(userId: string): Promise<SyncResult> {
   let lastSyncTime = getLastSyncTime(userId);
 
   try {
-    // Smart Empty-State Detection: If local database is completely empty, force full download
     const localDecksCount = await db.decks.count();
     if (localDecksCount === 0) {
       lastSyncTime = 0;
     }
 
-    // Step 1: Claim any guest decks and cards created prior to authentication
     await linkGuestDataToUser(userId);
 
-    // Step 2: Upload local modifications (decks and cards where updatedAt > lastSyncTime)
     const modifiedDecks = await getModifiedDecksSince(lastSyncTime);
     let uploadedDecks = 0;
     if (modifiedDecks.length > 0) {
       const deckRows = modifiedDecks.map((d) => deckToDbRow(d, userId));
-      const { error: deckUploadError } = await supabase.from('decks').upsert(deckRows);
+      const { error: deckUploadError } = await supabase
+        .from("decks")
+        .upsert(deckRows);
       if (deckUploadError) {
         throw new Error(`Failed to upload decks: ${deckUploadError.message}`);
       }
@@ -164,30 +155,31 @@ export async function syncWithCloud(userId: string): Promise<SyncResult> {
     let uploadedCards = 0;
     if (modifiedCards.length > 0) {
       const cardRows = modifiedCards.map((c) => cardToDbRow(c, userId));
-      const { error: cardUploadError } = await supabase.from('cards').upsert(cardRows);
+      const { error: cardUploadError } = await supabase
+        .from("cards")
+        .upsert(cardRows);
       if (cardUploadError) {
         throw new Error(`Failed to upload cards: ${cardUploadError.message}`);
       }
       uploadedCards = cardRows.length;
     }
 
-    // Step 3: Download remote changes created/modified since lastSyncTime
     let downloadedDecks = 0;
     let downloadedCards = 0;
 
-    // Add a 1-hour safety buffer to account for PC vs Server clock drift
     const CLOCK_DRIFT_BUFFER = 60 * 60 * 1000;
     const safeSyncTime = Math.max(0, lastSyncTime - CLOCK_DRIFT_BUFFER);
 
-    // Fetch remote decks updated since last sync
     const { data: remoteDecks, error: decksFetchError } = await supabase
-      .from('decks')
-      .select('*')
-      .eq('user_id', userId)
-      .gt('updated_at', safeSyncTime);
+      .from("decks")
+      .select("*")
+      .eq("user_id", userId)
+      .gt("updated_at", safeSyncTime);
 
     if (decksFetchError) {
-      throw new Error(`Failed to download remote decks: ${decksFetchError.message}`);
+      throw new Error(
+        `Failed to download remote decks: ${decksFetchError.message}`,
+      );
     }
 
     if (remoteDecks && remoteDecks.length > 0) {
@@ -196,15 +188,16 @@ export async function syncWithCloud(userId: string): Promise<SyncResult> {
       downloadedDecks = convertedDecks.length;
     }
 
-    // Fetch remote cards updated since last sync
     const { data: remoteCards, error: cardsFetchError } = await supabase
-      .from('cards')
-      .select('*')
-      .eq('user_id', userId)
-      .gt('updated_at', safeSyncTime);
+      .from("cards")
+      .select("*")
+      .eq("user_id", userId)
+      .gt("updated_at", safeSyncTime);
 
     if (cardsFetchError) {
-      throw new Error(`Failed to download remote cards: ${cardsFetchError.message}`);
+      throw new Error(
+        `Failed to download remote cards: ${cardsFetchError.message}`,
+      );
     }
 
     if (remoteCards && remoteCards.length > 0) {
@@ -213,17 +206,17 @@ export async function syncWithCloud(userId: string): Promise<SyncResult> {
       downloadedCards = convertedCards.length;
     }
 
-    // Step 4: Record successful sync completion timestamp
-    // We MUST use the maxServerTime to prevent the engine from thinking the newly downloaded server timestamps are local modifications!
     let maxServerTime = syncStartTime;
     if (remoteDecks) {
       for (const d of remoteDecks) {
-        if (Number(d.updated_at) > maxServerTime) maxServerTime = Number(d.updated_at);
+        if (Number(d.updated_at) > maxServerTime)
+          maxServerTime = Number(d.updated_at);
       }
     }
     if (remoteCards) {
       for (const c of remoteCards) {
-        if (Number(c.updated_at) > maxServerTime) maxServerTime = Number(c.updated_at);
+        if (Number(c.updated_at) > maxServerTime)
+          maxServerTime = Number(c.updated_at);
       }
     }
 
@@ -238,7 +231,7 @@ export async function syncWithCloud(userId: string): Promise<SyncResult> {
       timestamp: maxServerTime,
     };
   } catch (err: any) {
-    console.error('Cloud sync error:', err);
+    console.error("Cloud sync error:", err);
     return {
       success: false,
       uploadedDecks: 0,
@@ -246,7 +239,7 @@ export async function syncWithCloud(userId: string): Promise<SyncResult> {
       downloadedDecks: 0,
       downloadedCards: 0,
       timestamp: Date.now(),
-      error: err.message || 'Unknown sync error',
+      error: err.message || "Unknown sync error",
     };
   }
 }

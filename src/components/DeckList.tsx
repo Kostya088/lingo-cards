@@ -30,7 +30,6 @@ export const DeckList: React.FC<DeckListProps> = ({
 }) => {
   const [searchQuery, setSearchQuery] = useState("");
 
-  // Overall collection stats
   const totalCards = useMemo(
     () => decks.reduce((acc, d) => acc + d.totalCards, 0),
     [decks],
@@ -57,9 +56,7 @@ export const DeckList: React.FC<DeckListProps> = ({
 
   return (
     <div className="space-y-8 animate-fade-in">
-      {/* Top Banner / Stats Overview */}
       <div className="bg-gradient-to-r from-slate-900 via-slate-900 to-slate-950 dark:via-slate-800 dark:to-brand-950 text-white rounded-3xl p-6 sm:p-8 shadow-xl border border-slate-700/50 relative overflow-hidden">
-        {/* Background decorative glow */}
         <div className="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 bg-brand-500/10 rounded-full blur-3xl pointer-events-none" />
 
         <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
@@ -87,11 +84,9 @@ export const DeckList: React.FC<DeckListProps> = ({
           </button>
         </div>
 
-        {/* Global Stats bar */}
         {decks.length > 0 && (
           <div className="mt-6 pt-6 border-t border-slate-700/60">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2.5 sm:gap-6 sm:px-6 md:px-12 lg:px-20 max-w-3xl mx-auto">
-              {/* Total Cards */}
               <div className="flex items-center justify-between sm:justify-start gap-3 p-2.5 sm:p-0 rounded-2xl bg-slate-800/40 sm:bg-transparent border border-slate-700/40 sm:border-0">
                 <div className="flex items-center gap-3">
                   <div className="w-9 h-9 rounded-xl bg-slate-800 flex items-center justify-center text-slate-300 shrink-0">
@@ -111,7 +106,6 @@ export const DeckList: React.FC<DeckListProps> = ({
                 </p>
               </div>
 
-              {/* Mastered */}
               <div className="flex items-center justify-between sm:justify-start gap-3 p-2.5 sm:p-0 rounded-2xl bg-slate-800/40 sm:bg-transparent border border-slate-700/40 sm:border-0">
                 <div className="flex items-center gap-3">
                   <div className="w-9 h-9 rounded-xl bg-emerald-950/60 border border-emerald-800/50 flex items-center justify-center text-emerald-400 shrink-0">
@@ -131,7 +125,6 @@ export const DeckList: React.FC<DeckListProps> = ({
                 </p>
               </div>
 
-              {/* Due For Review */}
               <div className="flex items-center justify-between sm:justify-start gap-3 p-2.5 sm:p-0 rounded-2xl bg-slate-800/40 sm:bg-transparent border border-slate-700/40 sm:border-0">
                 <div className="flex items-center gap-3">
                   <div className="w-9 h-9 rounded-xl bg-amber-950/60 border border-amber-800/50 flex items-center justify-center text-amber-400 shrink-0">
@@ -155,7 +148,6 @@ export const DeckList: React.FC<DeckListProps> = ({
         )}
       </div>
 
-      {/* Header controls (Search & Title) */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-xl font-heading font-bold text-slate-900 dark:text-white flex items-center gap-2">
@@ -183,7 +175,6 @@ export const DeckList: React.FC<DeckListProps> = ({
         )}
       </div>
 
-      {/* Decks Grid or Empty State */}
       {decks.length === 0 ? (
         <div className="bg-white dark:bg-slate-900 rounded-3xl border border-dashed border-slate-300 dark:border-slate-800 p-12 text-center max-w-lg mx-auto space-y-4 shadow-sm">
           <div className="w-16 h-16 rounded-2xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 flex items-center justify-center mx-auto shadow-inner">

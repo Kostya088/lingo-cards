@@ -14,7 +14,6 @@ export const BottomNav: React.FC<BottomNavProps> = ({ hideBottomNav }) => {
 
   const [totalDue, setTotalDue] = useState(0);
 
-  // Fetch due cards count on path change or mount
   useEffect(() => {
     let isMounted = true;
     async function fetchDueCount() {
@@ -34,14 +33,12 @@ export const BottomNav: React.FC<BottomNavProps> = ({ hideBottomNav }) => {
     };
   }, [location.pathname]);
 
-  // Hide BottomNav if requested by child screen (e.g. during active study review)
   if (hideBottomNav) {
     return null;
   }
 
   const path = location.pathname;
 
-  // Hide BottomNav on editor and auth screens
   const isEditorOrAuth =
     path.startsWith("/decks/new") ||
     path.includes("/edit") ||
@@ -59,7 +56,6 @@ export const BottomNav: React.FC<BottomNavProps> = ({ hideBottomNav }) => {
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-40 md:hidden bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-t border-slate-200 dark:border-slate-800 shadow-lg pb-safe">
       <div className="flex justify-between h-16 max-w-lg mx-auto px-8 items-center relative">
-        {/* Tab 1: Decks */}
         <Link
           to="/"
           className={`flex flex-col items-center justify-center gap-1 py-1 w-16 transition-colors ${
@@ -80,7 +76,6 @@ export const BottomNav: React.FC<BottomNavProps> = ({ hideBottomNav }) => {
           <span className="text-[11px] leading-tight mt-0.5">Decks</span>
         </Link>
 
-        {/* Tab 2: Add Deck (+) */}
         <div className="flex items-center justify-center">
           <Link
             to="/decks/new"
@@ -91,7 +86,6 @@ export const BottomNav: React.FC<BottomNavProps> = ({ hideBottomNav }) => {
           </Link>
         </div>
 
-        {/* Tab 3: Account / Profile */}
         <Link
           to="/profile"
           className={`flex flex-col items-center justify-center gap-1 py-1 w-16 transition-colors ${
@@ -103,7 +97,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({ hideBottomNav }) => {
         >
           <div className="relative flex items-center justify-center h-6">
             <UserIcon className="w-5 h-5" />
-            {/* Sync Status Dot Indicator */}
+
             {user && (
               <span className="absolute -bottom-0.5 -right-1 flex h-2.5 w-2.5">
                 {syncStatus === "syncing" ? (

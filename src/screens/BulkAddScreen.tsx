@@ -1,19 +1,27 @@
-import React, { useState, useMemo, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, CheckCircle, AlertCircle, FileText, Loader2 } from 'lucide-react';
-import { getDeckById, createCardsBulk } from '../db';
-import { type DeckWithStats } from '../types';
+import React, { useState, useMemo, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import {
+  ArrowLeft,
+  CheckCircle,
+  AlertCircle,
+  FileText,
+  Loader2,
+} from "lucide-react";
+import { getDeckById, createCardsBulk } from "../db";
+import { type DeckWithStats } from "../types";
 
 export const BulkAddScreen: React.FC = () => {
   const { deckId } = useParams<{ deckId: string }>();
   const navigate = useNavigate();
 
   const [deck, setDeck] = useState<DeckWithStats | null>(null);
-  const [text, setText] = useState('');
-  const [separator, setSeparator] = useState<'auto' | '-' | ',' | ':' | '\t'>('auto');
+  const [text, setText] = useState("");
+  const [separator, setSeparator] = useState<"auto" | "-" | "," | ":" | "\t">(
+    "auto",
+  );
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   useEffect(() => {
     let isMounted = true;
@@ -26,7 +34,7 @@ export const BulkAddScreen: React.FC = () => {
         if (!isMounted) return;
         setDeck(currentDeck);
       } catch (err) {
-        console.error('Failed to load deck:', err);
+        console.error("Failed to load deck:", err);
       } finally {
         if (isMounted) setIsLoading(false);
       }
@@ -38,40 +46,39 @@ export const BulkAddScreen: React.FC = () => {
     };
   }, [deckId]);
 
-  // Parse text live
   const parsedCards = useMemo(() => {
     if (!text.trim()) return [];
 
-    const lines = text.split('\n');
+    const lines = text.split("\n");
     const results: Array<{ front: string; back: string; notes?: string }> = [];
 
     for (const rawLine of lines) {
       const line = rawLine.trim();
-      if (!line || line.startsWith('#') || line.startsWith('//')) continue;
+      if (!line || line.startsWith("#") || line.startsWith("//")) continue;
 
       let delimiter = separator;
-      if (delimiter === 'auto') {
-        if (line.includes('\t')) delimiter = '\t';
-        else if (line.includes(' - ')) delimiter = '-';
-        else if (line.includes(' : ')) delimiter = ':';
-        else if (line.includes('-')) delimiter = '-';
-        else if (line.includes(':')) delimiter = ':';
-        else if (line.includes(',')) delimiter = ',';
-        else delimiter = '-';
+      if (delimiter === "auto") {
+        if (line.includes("\t")) delimiter = "\t";
+        else if (line.includes(" - ")) delimiter = "-";
+        else if (line.includes(" : ")) delimiter = ":";
+        else if (line.includes("-")) delimiter = "-";
+        else if (line.includes(":")) delimiter = ":";
+        else if (line.includes(",")) delimiter = ",";
+        else delimiter = "-";
       }
 
       let parts: string[] = [];
-      if (delimiter === '-') {
-        if (line.includes(' - ')) {
-          parts = line.split(' - ');
+      if (delimiter === "-") {
+        if (line.includes(" - ")) {
+          parts = line.split(" - ");
         } else {
-          parts = line.split('-');
+          parts = line.split("-");
         }
-      } else if (delimiter === ':') {
-        if (line.includes(' : ')) {
-          parts = line.split(' : ');
+      } else if (delimiter === ":") {
+        if (line.includes(" : ")) {
+          parts = line.split(" : ");
         } else {
-          parts = line.split(':');
+          parts = line.split(":");
         }
       } else {
         parts = line.split(delimiter);
@@ -80,7 +87,7 @@ export const BulkAddScreen: React.FC = () => {
       if (parts.length >= 2) {
         const front = parts[0].trim();
         const back = parts[1].trim();
-        const notes = parts.slice(2).join(' ').trim() || undefined;
+        const notes = parts.slice(2).join(" ").trim() || undefined;
 
         if (front && back) {
           results.push({ front, back, notes });
@@ -95,17 +102,17 @@ export const BulkAddScreen: React.FC = () => {
     e.preventDefault();
     if (!deckId) return;
     if (parsedCards.length === 0) {
-      setError('No valid flashcards found. Please check your text format.');
+      setError("No valid flashcards found. Please check your text format.");
       return;
     }
 
     try {
       setIsSubmitting(true);
-      setError('');
+      setError("");
       await createCardsBulk(deckId, parsedCards);
       navigate(`/decks/${deckId}`);
     } catch (err: any) {
-      setError(err.message || 'Failed to bulk import cards.');
+      setError(err.message || "Failed to bulk import cards.");
     } finally {
       setIsSubmitting(false);
     }
@@ -119,12 +126,11 @@ export const BulkAddScreen: React.FC = () => {
     );
   }
 
-  const targetLang = deck?.targetLanguage || 'Target Word';
-  const nativeLang = deck?.nativeLanguage || 'Translation';
+  const targetLang = deck?.targetLanguage || "Target Word";
+  const nativeLang = deck?.nativeLanguage || "Translation";
 
   return (
     <div className="flex-1 flex flex-col -mx-4 sm:mx-0">
-      {/* Top Header with Notch Clearance */}
       <header className="sticky top-0 z-30 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md sm:backdrop-blur-none border-b border-slate-200 dark:border-slate-800 header-safe-top pb-3 px-4 sm:px-0 sm:border-0 sm:bg-transparent sm:dark:bg-transparent sm:static">
         <div className="flex items-center justify-between max-w-2xl mx-auto">
           <div className="flex items-center gap-3">
@@ -151,7 +157,6 @@ export const BulkAddScreen: React.FC = () => {
         </div>
       </header>
 
-      {/* Main Content */}
       <div className="flex-1 max-w-2xl w-full mx-auto p-4 sm:p-0 sm:my-6">
         <form
           onSubmit={handleSubmit}
@@ -164,28 +169,28 @@ export const BulkAddScreen: React.FC = () => {
             </div>
           )}
 
-          {/* Separator selector */}
           <div className="flex items-center justify-between text-xs text-slate-600 dark:text-slate-400">
-            <span className="font-semibold uppercase tracking-wider">Delimiter:</span>
+            <span className="font-semibold uppercase tracking-wider">
+              Delimiter:
+            </span>
             <div className="flex items-center gap-1.5 bg-slate-100 dark:bg-slate-800 p-1 rounded-lg">
-              {(['auto', '-', ',', ':', '\t'] as const).map((sep) => (
+              {(["auto", "-", ",", ":", "\t"] as const).map((sep) => (
                 <button
                   key={sep}
                   type="button"
                   onClick={() => setSeparator(sep)}
                   className={`px-2.5 py-1 rounded-md font-medium transition-all ${
                     separator === sep
-                      ? 'bg-white dark:bg-slate-700 text-brand-600 dark:text-brand-400 shadow-sm'
-                      : 'hover:text-slate-900 dark:hover:text-white'
+                      ? "bg-white dark:bg-slate-700 text-brand-600 dark:text-brand-400 shadow-sm"
+                      : "hover:text-slate-900 dark:hover:text-white"
                   }`}
                 >
-                  {sep === 'auto' ? 'Auto' : sep === '\t' ? 'Tab' : sep}
+                  {sep === "auto" ? "Auto" : sep === "\t" ? "Tab" : sep}
                 </button>
               ))}
             </div>
           </div>
 
-          {/* Text Area */}
           <div>
             <textarea
               rows={8}
@@ -197,7 +202,6 @@ export const BulkAddScreen: React.FC = () => {
             />
           </div>
 
-          {/* Preview Section */}
           <div>
             <div className="flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2">
               <span>Preview Parsed Cards</span>
@@ -208,12 +212,17 @@ export const BulkAddScreen: React.FC = () => {
 
             {parsedCards.length === 0 ? (
               <div className="p-6 text-center border border-dashed border-slate-200 dark:border-slate-800 rounded-xl text-slate-400 text-sm">
-                Paste lines formatted like <code className="text-brand-500">word - translation</code> to preview cards
+                Paste lines formatted like{" "}
+                <code className="text-brand-500">word - translation</code> to
+                preview cards
               </div>
             ) : (
               <div className="max-h-56 overflow-y-auto rounded-xl border border-slate-200 dark:border-slate-800 divide-y divide-slate-100 dark:divide-slate-800/60 bg-slate-50/50 dark:bg-slate-800/20">
                 {parsedCards.slice(0, 20).map((card, idx) => (
-                  <div key={idx} className="p-2.5 px-3 flex items-center justify-between text-xs">
+                  <div
+                    key={idx}
+                    className="p-2.5 px-3 flex items-center justify-between text-xs"
+                  >
                     <div className="flex items-center gap-2 truncate">
                       <CheckCircle className="w-5 h-5 text-emerald-500 shrink-0" />
                       <span className="font-semibold text-slate-800 dark:text-slate-200 truncate">
@@ -240,7 +249,6 @@ export const BulkAddScreen: React.FC = () => {
             )}
           </div>
 
-          {/* Actions */}
           <div className="pt-4 flex items-center justify-end gap-3 border-t border-slate-100 dark:border-slate-800">
             <button
               type="button"
@@ -255,7 +263,11 @@ export const BulkAddScreen: React.FC = () => {
               className="px-6 py-2.5 text-sm font-medium text-white bg-brand-600 hover:bg-brand-500 rounded-xl shadow-md shadow-brand-600/20 disabled:opacity-50 transition-all flex items-center gap-2"
             >
               {isSubmitting && <Loader2 className="w-5 h-5 animate-spin" />}
-              <span>{isSubmitting ? 'Importing...' : `Add ${parsedCards.length} Cards`}</span>
+              <span>
+                {isSubmitting
+                  ? "Importing..."
+                  : `Add ${parsedCards.length} Cards`}
+              </span>
             </button>
           </div>
         </form>

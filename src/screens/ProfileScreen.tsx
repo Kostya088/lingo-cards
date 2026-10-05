@@ -15,7 +15,7 @@ export const ProfileScreen: React.FC = () => {
     syncNow,
     isConfigured,
   } = useAuth();
-  
+
   const { decks, refresh } = useDecks();
 
   return (

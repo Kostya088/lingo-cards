@@ -125,7 +125,6 @@ export const ProfileSettings: React.FC<ProfileSettingsProps> = ({
 
   return (
     <div className="max-w-2xl mx-auto space-y-4 sm:space-y-6 animate-fade-in">
-      {/* Back Header */}
       <div className="flex items-center gap-3">
         <button
           onClick={onNavigateHome}
@@ -144,7 +143,6 @@ export const ProfileSettings: React.FC<ProfileSettingsProps> = ({
         </div>
       </div>
 
-      {/* Account Info Card */}
       {user ? (
         <div className="bg-white dark:bg-slate-900 rounded-3xl p-4 sm:p-6 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4 sm:space-y-6">
           <div className="flex flex-col items-start gap-4 sm:gap-5 w-full">
@@ -234,7 +232,6 @@ export const ProfileSettings: React.FC<ProfileSettingsProps> = ({
             </div>
           </div>
 
-          {/* Inline Change Password Form */}
           {isChangingPassword && (
             <div className="pt-4 border-t border-slate-100 dark:border-slate-800 animate-fade-in">
               <form
@@ -299,7 +296,6 @@ export const ProfileSettings: React.FC<ProfileSettingsProps> = ({
 
           <hr className="border-slate-100 dark:border-slate-800" />
 
-          {/* Sync Status Section */}
           <div className="space-y-4">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0">
               <div>
@@ -327,7 +323,6 @@ export const ProfileSettings: React.FC<ProfileSettingsProps> = ({
               </button>
             </div>
 
-            {/* Sync State Badge */}
             <div className="p-3 sm:p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/60 flex items-start sm:items-center gap-3">
               {syncStatus === "synced" && (
                 <>
@@ -398,7 +393,6 @@ export const ProfileSettings: React.FC<ProfileSettingsProps> = ({
           </div>
         </div>
       ) : (
-        /* Guest Mode Promo Card */
         <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-brand-950 text-white rounded-3xl p-5 sm:p-8 shadow-xl border border-slate-700/60 relative overflow-hidden space-y-4">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-brand-500/20 border border-brand-400/30 text-brand-300 text-xs font-semibold">
             <Sparkles className="w-5 h-5 shrink-0" />
@@ -424,7 +418,6 @@ export const ProfileSettings: React.FC<ProfileSettingsProps> = ({
         </div>
       )}
 
-      {/* Local Storage Stats */}
       <div className="bg-white dark:bg-slate-900 rounded-3xl p-4 sm:p-6 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
         <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100 flex items-center gap-2">
           <HardDrive className="w-5 h-5 text-brand-500 shrink-0" />

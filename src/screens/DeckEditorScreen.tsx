@@ -1,16 +1,46 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Check, Loader2 } from 'lucide-react';
-import { getDeckById, createDeck, updateDeck } from '../db';
-import { type DeckWithStats } from '../types';
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { ArrowLeft, Check, Loader2 } from "lucide-react";
+import { getDeckById, createDeck, updateDeck } from "../db";
+import { type DeckWithStats } from "../types";
 
 const COLOR_OPTIONS = [
-  { id: 'emerald', bg: 'bg-emerald-500', border: 'border-emerald-600', ring: 'ring-emerald-500' },
-  { id: 'blue', bg: 'bg-blue-500', border: 'border-blue-600', ring: 'ring-blue-500' },
-  { id: 'indigo', bg: 'bg-indigo-500', border: 'border-indigo-600', ring: 'ring-indigo-500' },
-  { id: 'purple', bg: 'bg-purple-500', border: 'border-purple-600', ring: 'ring-purple-500' },
-  { id: 'rose', bg: 'bg-rose-500', border: 'border-rose-600', ring: 'ring-rose-500' },
-  { id: 'amber', bg: 'bg-amber-500', border: 'border-amber-600', ring: 'ring-amber-500' },
+  {
+    id: "emerald",
+    bg: "bg-emerald-500",
+    border: "border-emerald-600",
+    ring: "ring-emerald-500",
+  },
+  {
+    id: "blue",
+    bg: "bg-blue-500",
+    border: "border-blue-600",
+    ring: "ring-blue-500",
+  },
+  {
+    id: "indigo",
+    bg: "bg-indigo-500",
+    border: "border-indigo-600",
+    ring: "ring-indigo-500",
+  },
+  {
+    id: "purple",
+    bg: "bg-purple-500",
+    border: "border-purple-600",
+    ring: "ring-purple-500",
+  },
+  {
+    id: "rose",
+    bg: "bg-rose-500",
+    border: "border-rose-600",
+    ring: "ring-rose-500",
+  },
+  {
+    id: "amber",
+    bg: "bg-amber-500",
+    border: "border-amber-600",
+    ring: "ring-amber-500",
+  },
 ];
 
 export const DeckEditorScreen: React.FC = () => {
@@ -18,14 +48,14 @@ export const DeckEditorScreen: React.FC = () => {
   const navigate = useNavigate();
 
   const [existingDeck, setExistingDeck] = useState<DeckWithStats | null>(null);
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [targetLanguage, setTargetLanguage] = useState('');
-  const [nativeLanguage, setNativeLanguage] = useState('English');
-  const [color, setColor] = useState('emerald');
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [targetLanguage, setTargetLanguage] = useState("");
+  const [nativeLanguage, setNativeLanguage] = useState("English");
+  const [color, setColor] = useState("emerald");
   const [isLoading, setIsLoading] = useState(Boolean(deckId));
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   const isEditing = Boolean(deckId);
 
@@ -41,13 +71,13 @@ export const DeckEditorScreen: React.FC = () => {
         if (deck) {
           setExistingDeck(deck);
           setTitle(deck.title);
-          setDescription(deck.description || '');
-          setTargetLanguage(deck.targetLanguage || '');
-          setNativeLanguage(deck.nativeLanguage || 'English');
-          setColor(deck.color || 'emerald');
+          setDescription(deck.description || "");
+          setTargetLanguage(deck.targetLanguage || "");
+          setNativeLanguage(deck.nativeLanguage || "English");
+          setColor(deck.color || "emerald");
         }
       } catch (err) {
-        console.error('Failed to load deck:', err);
+        console.error("Failed to load deck:", err);
       } finally {
         if (isMounted) setIsLoading(false);
       }
@@ -62,24 +92,24 @@ export const DeckEditorScreen: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!title.trim()) {
-      setError('Please provide a deck title.');
+      setError("Please provide a deck title.");
       return;
     }
     if (!targetLanguage.trim()) {
-      setError('Please specify the language you are learning.');
+      setError("Please specify the language you are learning.");
       return;
     }
 
     try {
       setIsSubmitting(true);
-      setError('');
+      setError("");
 
       if (isEditing && existingDeck) {
         await updateDeck(existingDeck.id, {
           title: title.trim(),
           description: description.trim() || undefined,
           targetLanguage: targetLanguage.trim(),
-          nativeLanguage: nativeLanguage.trim() || 'English',
+          nativeLanguage: nativeLanguage.trim() || "English",
           color,
         });
         navigate(`/decks/${existingDeck.id}`);
@@ -88,13 +118,13 @@ export const DeckEditorScreen: React.FC = () => {
           title: title.trim(),
           description: description.trim() || undefined,
           targetLanguage: targetLanguage.trim(),
-          nativeLanguage: nativeLanguage.trim() || 'English',
+          nativeLanguage: nativeLanguage.trim() || "English",
           color,
         });
         navigate(`/decks/${newDeckId}`);
       }
     } catch (err: any) {
-      setError(err.message || 'Failed to save deck.');
+      setError(err.message || "Failed to save deck.");
     } finally {
       setIsSubmitting(false);
     }
@@ -110,7 +140,6 @@ export const DeckEditorScreen: React.FC = () => {
 
   return (
     <div className="flex-1 flex flex-col -mx-4 sm:mx-0 animate-fade-in">
-      {/* Top Header with Dynamic Island & Notch Clearance */}
       <header className="sticky top-0 z-30 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md sm:backdrop-blur-none border-b border-slate-200 dark:border-slate-800 header-safe-top pb-3 px-4 sm:px-0 sm:border-0 sm:bg-transparent sm:dark:bg-transparent sm:static">
         <div className="flex items-center justify-between max-w-xl mx-auto w-full">
           <div className="flex items-center gap-3 min-w-0">
@@ -120,7 +149,7 @@ export const DeckEditorScreen: React.FC = () => {
                 if (window.history.state && window.history.state.idx > 0) {
                   navigate(-1);
                 } else {
-                  navigate(isEditing ? `/decks/${deckId}` : '/');
+                  navigate(isEditing ? `/decks/${deckId}` : "/");
                 }
               }}
               className="p-2 sm:p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-50 dark:hover:bg-slate-800 shadow-sm transition-all shrink-0"
@@ -130,17 +159,18 @@ export const DeckEditorScreen: React.FC = () => {
             </button>
             <div className="min-w-0">
               <h1 className="text-lg sm:text-2xl font-heading font-bold text-slate-900 dark:text-white leading-tight truncate">
-                {isEditing ? 'Edit Deck' : 'Create New Deck'}
+                {isEditing ? "Edit Deck" : "Create New Deck"}
               </h1>
               <p className="text-xs text-slate-500 dark:text-slate-400 truncate">
-                {isEditing ? 'Update deck settings and languages' : 'Set up a new vocabulary deck'}
+                {isEditing
+                  ? "Update deck settings and languages"
+                  : "Set up a new vocabulary deck"}
               </p>
             </div>
           </div>
         </div>
       </header>
 
-      {/* Form Content */}
       <div className="flex-1 max-w-xl w-full mx-auto p-4 sm:p-0 sm:my-6 pb-safe">
         <form
           onSubmit={handleSubmit}
@@ -152,7 +182,6 @@ export const DeckEditorScreen: React.FC = () => {
             </div>
           )}
 
-          {/* Deck Title */}
           <div>
             <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">
               Deck Title *
@@ -168,7 +197,6 @@ export const DeckEditorScreen: React.FC = () => {
             />
           </div>
 
-          {/* Description */}
           <div>
             <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">
               Description (Optional)
@@ -182,7 +210,6 @@ export const DeckEditorScreen: React.FC = () => {
             />
           </div>
 
-          {/* Languages Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-4">
             <div>
               <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">
@@ -211,7 +238,6 @@ export const DeckEditorScreen: React.FC = () => {
             </div>
           </div>
 
-          {/* Color theme */}
           <div>
             <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-2">
               Color Accent
@@ -225,7 +251,7 @@ export const DeckEditorScreen: React.FC = () => {
                   className={`w-8 h-8 sm:w-9 sm:h-9 rounded-xl ${c.bg} transition-all flex items-center justify-center text-white ${
                     color === c.id
                       ? `ring-2 ring-offset-2 ${c.ring} dark:ring-offset-slate-900 scale-105 shadow-md`
-                      : 'opacity-80 hover:opacity-100 hover:scale-105'
+                      : "opacity-80 hover:opacity-100 hover:scale-105"
                   }`}
                   aria-label={`Select ${c.id} color`}
                 >
@@ -235,7 +261,6 @@ export const DeckEditorScreen: React.FC = () => {
             </div>
           </div>
 
-          {/* Actions */}
           <div className="pt-3 sm:pt-4 flex flex-col-reverse sm:flex-row items-center justify-end gap-2.5 sm:gap-3 border-t border-slate-100 dark:border-slate-800">
             <button
               type="button"
@@ -243,7 +268,7 @@ export const DeckEditorScreen: React.FC = () => {
                 if (window.history.state && window.history.state.idx > 0) {
                   navigate(-1);
                 } else {
-                  navigate(isEditing ? `/decks/${deckId}` : '/');
+                  navigate(isEditing ? `/decks/${deckId}` : "/");
                 }
               }}
               className="w-full sm:w-auto px-5 py-3 text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors text-center min-h-[44px]"
@@ -255,8 +280,16 @@ export const DeckEditorScreen: React.FC = () => {
               disabled={isSubmitting}
               className="w-full sm:w-auto px-6 py-3 text-xs sm:text-sm font-bold text-white bg-brand-600 hover:bg-brand-500 rounded-xl shadow-lg shadow-brand-600/25 disabled:opacity-50 hover:scale-[1.01] active:scale-[0.99] transition-all flex items-center justify-center gap-2 min-h-[44px]"
             >
-              {isSubmitting && <Loader2 className="w-5 h-5 animate-spin shrink-0" />}
-              <span>{isSubmitting ? 'Saving...' : isEditing ? 'Update Deck' : 'Create Deck'}</span>
+              {isSubmitting && (
+                <Loader2 className="w-5 h-5 animate-spin shrink-0" />
+              )}
+              <span>
+                {isSubmitting
+                  ? "Saving..."
+                  : isEditing
+                    ? "Update Deck"
+                    : "Create Deck"}
+              </span>
             </button>
           </div>
         </form>
