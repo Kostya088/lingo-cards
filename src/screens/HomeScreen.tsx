@@ -2,7 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Loader2 } from "lucide-react";
 import { DeckList } from "../components/DeckList";
-import { deleteDeck, exportDeckAsText } from "../db";
+import { deleteDeck } from "../db";
 import { useDecks } from "../hooks/useDecks";
 
 export const HomeScreen: React.FC = () => {
@@ -25,26 +25,6 @@ export const HomeScreen: React.FC = () => {
     }
   };
 
-  const handleExportDeck = async (deckId: string) => {
-    try {
-      const text = await exportDeckAsText(deckId);
-      const deck = decks.find((d) => d.id === deckId);
-      const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      const safeTitle =
-        deck?.title.replace(/[^a-z0-9]/gi, "_").toLowerCase() || "deck";
-      link.href = url;
-      link.download = `${safeTitle}.txt`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      URL.revokeObjectURL(url);
-    } catch (err: any) {
-      console.error("Export failed:", err);
-      alert(`Export failed: ${err.message || "Unknown error"}`);
-    }
-  };
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-[50vh] text-slate-400">
@@ -62,7 +42,6 @@ export const HomeScreen: React.FC = () => {
         onOpenCreateModal={() => navigate("/decks/new")}
         onEditDeck={(deck) => navigate(`/decks/${deck.id}/edit`)}
         onDeleteDeck={handleDeleteDeck}
-        onExportDeck={handleExportDeck}
       />
     </div>
   );

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Play, MoreVertical, Edit2, Trash2, Download, BookOpen, CheckCircle, Clock } from 'lucide-react';
+import { Play, MoreVertical, Edit2, Trash2, BookOpen, CheckCircle, Clock } from 'lucide-react';
 import { type DeckWithStats } from '../types';
 
 interface DeckCardProps {
@@ -8,7 +8,6 @@ interface DeckCardProps {
   onStartStudy: (deck: DeckWithStats) => void;
   onEdit: (deck: DeckWithStats) => void;
   onDelete: (deckId: string) => void;
-  onExport: (deckId: string) => void;
 }
 
 const COLOR_MAP: Record<string, { bg: string; text: string; lightBg: string; border: string }> = {
@@ -26,7 +25,6 @@ export const DeckCard: React.FC<DeckCardProps> = ({
   onStartStudy,
   onEdit,
   onDelete,
-  onExport,
 }) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -93,17 +91,6 @@ export const DeckCard: React.FC<DeckCardProps> = ({
                   >
                     <Edit2 className="w-3.5 h-3.5" />
                     Edit Deck
-                  </button>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setMenuOpen(false);
-                      if (deck.id) onExport(deck.id);
-                    }}
-                    className="w-full px-3 py-2 text-left text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700/60 flex items-center gap-2"
-                  >
-                    <Download className="w-3.5 h-3.5" />
-                    Export JSON
                   </button>
                   <div className="my-1 border-t border-slate-100 dark:border-slate-700" />
                   <button

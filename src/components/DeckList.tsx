@@ -18,7 +18,6 @@ interface DeckListProps {
   onOpenCreateModal: () => void;
   onEditDeck: (deck: DeckWithStats) => void;
   onDeleteDeck: (deckId: string) => void;
-  onExportDeck: (deckId: string) => void;
 }
 
 export const DeckList: React.FC<DeckListProps> = ({
@@ -28,7 +27,6 @@ export const DeckList: React.FC<DeckListProps> = ({
   onOpenCreateModal,
   onEditDeck,
   onDeleteDeck,
-  onExportDeck,
 }) => {
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -222,7 +220,6 @@ export const DeckList: React.FC<DeckListProps> = ({
               onStartStudy={onStartStudy}
               onEdit={onEditDeck}
               onDelete={onDeleteDeck}
-              onExport={onExportDeck}
             />
           ))}
         </div>

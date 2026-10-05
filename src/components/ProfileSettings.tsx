@@ -249,7 +249,7 @@ export const ProfileSettings: React.FC<ProfileSettingsProps> = ({
       <div className="bg-white dark:bg-slate-900 rounded-3xl p-4 sm:p-6 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
         <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100 flex items-center gap-2">
           <HardDrive className="w-4 h-4 text-brand-500 shrink-0" />
-          Local Storage & Statistics
+          Statistics
         </h3>
         <div className="grid grid-cols-2 gap-3 sm:gap-4">
           <div className="p-3 sm:p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800">
@@ -269,10 +269,6 @@ export const ProfileSettings: React.FC<ProfileSettingsProps> = ({
             </div>
           </div>
         </div>
-        <p className="text-[10px] sm:text-xs text-slate-400 dark:text-slate-500 leading-relaxed">
-          Cards are stored with 0ms latency in your browser’s IndexedDB and
-          mirrored to PostgreSQL whenever an internet connection is available.
-        </p>
       </div>
     </div>
   );

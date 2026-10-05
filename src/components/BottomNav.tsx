@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { Layers, User as UserIcon, RefreshCw } from 'lucide-react';
-import { useAuth } from '../context/AuthContext';
-import { getAllDecksWithStats } from '../db';
+import React, { useState, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { Layers, User as UserIcon, RefreshCw, Plus } from "lucide-react";
+import { useAuth } from "../context/AuthContext";
+import { getAllDecksWithStats } from "../db";
 
 interface BottomNavProps {
   hideBottomNav?: boolean;
@@ -25,7 +25,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({ hideBottomNav }) => {
           setTotalDue(due);
         }
       } catch (e) {
-        console.error('Failed to get due count:', e);
+        console.error("Failed to get due count:", e);
       }
     }
     fetchDueCount();
@@ -43,81 +43,81 @@ export const BottomNav: React.FC<BottomNavProps> = ({ hideBottomNav }) => {
 
   // Hide BottomNav on editor and auth screens
   const isEditorOrAuth =
-    path.startsWith('/decks/new') ||
-    path.includes('/edit') ||
-    path.includes('/cards/') ||
-    path.includes('/bulk-add') ||
-    path === '/auth';
+    path.startsWith("/decks/new") ||
+    path.includes("/edit") ||
+    path.includes("/cards/") ||
+    path.includes("/bulk-add") ||
+    path === "/auth";
 
   if (isEditorOrAuth) {
     return null;
   }
 
-  const isDecksActive = path === '/' || /^\/deck\/[^/]+$/.test(path);
-  const isProfileActive = path === '/profile';
+  const isDecksActive = path === "/" || /^\/deck\/[^/]+$/.test(path);
+  const isProfileActive = path === "/profile";
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-40 md:hidden bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-t border-slate-200 dark:border-slate-800 shadow-lg pb-safe">
-      <div className="grid grid-cols-3 h-16 max-w-lg mx-auto px-4 items-center relative">
+      <div className="flex justify-between h-16 max-w-lg mx-auto px-8 items-center relative">
         {/* Tab 1: Decks */}
         <Link
           to="/"
-          className={`flex flex-col items-center justify-center gap-1 py-1 transition-colors ${
+          className={`flex flex-col items-center justify-center gap-1 py-1 w-16 transition-colors ${
             isDecksActive
-              ? 'text-brand-600 dark:text-brand-400 font-semibold'
-              : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
+              ? "text-brand-600 dark:text-brand-400 font-semibold"
+              : "text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200"
           }`}
           aria-label="Decks"
         >
-          <div className="relative">
+          <div className="relative flex items-center justify-center h-6">
             <Layers className="w-5 h-5" />
             {totalDue > 0 && (
               <span className="absolute -top-1.5 -right-2 px-1.5 py-0.2 rounded-full text-[10px] font-bold bg-amber-500 text-white min-w-[16px] text-center shadow-sm">
-                {totalDue > 99 ? '99+' : totalDue}
+                {totalDue > 99 ? "99+" : totalDue}
               </span>
             )}
           </div>
-          <span className="text-[11px] leading-tight">Decks</span>
+          <span className="text-[11px] leading-tight mt-0.5">Decks</span>
         </Link>
 
         {/* Tab 2: Add Deck (+) */}
-        <div className="flex items-center justify-center -mt-6">
+        <div className="flex items-center justify-center">
           <Link
             to="/decks/new"
             className="flex items-center justify-center w-12 h-12 bg-brand-600 hover:bg-brand-500 text-white rounded-full shadow-lg shadow-brand-500/30 transition-transform active:scale-95"
             aria-label="Add New Deck"
           >
-            <div className="text-2xl font-light mb-0.5">+</div>
+            <Plus className="w-6 h-6 stroke-[2]" />
           </Link>
         </div>
 
         {/* Tab 3: Account / Profile */}
         <Link
           to="/profile"
-          className={`flex flex-col items-center justify-center gap-1 py-1 transition-colors ${
+          className={`flex flex-col items-center justify-center gap-1 py-1 w-16 transition-colors ${
             isProfileActive
-              ? 'text-brand-600 dark:text-brand-400 font-semibold'
-              : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
+              ? "text-brand-600 dark:text-brand-400 font-semibold"
+              : "text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200"
           }`}
           aria-label="Account Profile"
         >
-          <div className="relative">
+          <div className="relative flex items-center justify-center h-6">
             <UserIcon className="w-5 h-5" />
             {/* Sync Status Dot Indicator */}
             {user && (
               <span className="absolute -bottom-0.5 -right-1 flex h-2.5 w-2.5">
-                {syncStatus === 'syncing' ? (
+                {syncStatus === "syncing" ? (
                   <RefreshCw className="w-2.5 h-2.5 text-brand-500 animate-spin" />
-                ) : syncStatus === 'synced' ? (
+                ) : syncStatus === "synced" ? (
                   <span className="h-2 w-2 rounded-full bg-emerald-500 ring-2 ring-white dark:ring-slate-900" />
-                ) : syncStatus === 'offline' ? (
+                ) : syncStatus === "offline" ? (
                   <span className="h-2 w-2 rounded-full bg-amber-500 ring-2 ring-white dark:ring-slate-900" />
                 ) : null}
               </span>
             )}
           </div>
-          <span className="text-[11px] leading-tight">
-            {user ? 'Account' : 'Profile'}
+          <span className="text-[11px] leading-tight mt-0.5">
+            {user ? "Account" : "Profile"}
           </span>
         </Link>
       </div>
