@@ -102,6 +102,15 @@ export function setLastSyncTime(userId: string, timestamp: number): void {
   localStorage.setItem(`lingocards_last_sync_${userId}`, String(timestamp));
 }
 
+export function getLocalSyncTime(userId: string): number {
+  const stored = localStorage.getItem(`lingocards_local_sync_${userId}`);
+  return stored ? Number(stored) : 0;
+}
+
+export function setLocalSyncTime(userId: string, timestamp: number): void {
+  localStorage.setItem(`lingocards_local_sync_${userId}`, String(timestamp));
+}
+
 export async function syncWithCloud(userId: string): Promise<SyncResult> {
   if (!supabase) {
     return {
@@ -129,16 +138,18 @@ export async function syncWithCloud(userId: string): Promise<SyncResult> {
 
   const syncStartTime = Date.now();
   let lastSyncTime = getLastSyncTime(userId);
+  let localSyncTime = getLocalSyncTime(userId);
 
   try {
     const localDecksCount = await db.decks.count();
     if (localDecksCount === 0) {
       lastSyncTime = 0;
+      localSyncTime = 0;
     }
 
     await linkGuestDataToUser(userId);
 
-    const modifiedDecks = await getModifiedDecksSince(lastSyncTime);
+    const modifiedDecks = await getModifiedDecksSince(localSyncTime);
     let uploadedDecks = 0;
     if (modifiedDecks.length > 0) {
       const deckRows = modifiedDecks.map((d) => deckToDbRow(d, userId));
@@ -151,7 +162,7 @@ export async function syncWithCloud(userId: string): Promise<SyncResult> {
       uploadedDecks = deckRows.length;
     }
 
-    const modifiedCards = await getModifiedCardsSince(lastSyncTime);
+    const modifiedCards = await getModifiedCardsSince(localSyncTime);
     let uploadedCards = 0;
     if (modifiedCards.length > 0) {
       const cardRows = modifiedCards.map((c) => cardToDbRow(c, userId));
@@ -167,7 +178,7 @@ export async function syncWithCloud(userId: string): Promise<SyncResult> {
     let downloadedDecks = 0;
     let downloadedCards = 0;
 
-    const CLOCK_DRIFT_BUFFER = 60 * 60 * 1000;
+    const CLOCK_DRIFT_BUFFER = 7 * 24 * 60 * 60 * 1000;
     const safeSyncTime = Math.max(0, lastSyncTime - CLOCK_DRIFT_BUFFER);
 
     const { data: remoteDecks, error: decksFetchError } = await supabase
@@ -221,6 +232,7 @@ export async function syncWithCloud(userId: string): Promise<SyncResult> {
     }
 
     setLastSyncTime(userId, maxServerTime);
+    setLocalSyncTime(userId, syncStartTime);
 
     return {
       success: true,
