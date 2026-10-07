@@ -1,4 +1,4 @@
-import { db, generateUUID } from "./schema";
+import { db, generateUUID, getNextTimestamp } from "./schema";
 import { type Deck, type DeckWithStats } from "../types";
 import { getDeckCards } from "./cardQueries";
 
@@ -62,12 +62,13 @@ export async function createDeck(
   data: Omit<Deck, "id" | "createdAt" | "updatedAt" | "isDeleted">,
 ): Promise<string> {
   const now = Date.now();
+  const nextTimestamp = await getNextTimestamp();
   const id = generateUUID();
   const newDeck: Deck = {
     ...data,
     id,
     createdAt: now,
-    updatedAt: now,
+    updatedAt: nextTimestamp,
     isDeleted: false,
   };
   await db.decks.add(newDeck);
@@ -80,19 +81,22 @@ export async function updateDeck(
 ): Promise<number> {
   return await db.decks.update(id, {
     ...data,
-    updatedAt: Date.now(),
+    updatedAt: await getNextTimestamp(),
   });
 }
 
 export async function deleteDeck(id: string): Promise<void> {
-  const now = Date.now();
+  const nextTimestamp = await getNextTimestamp();
   await db.transaction("rw", db.decks, db.cards, async () => {
     const cards = await getDeckCards(id);
     for (const card of cards) {
       if (card.id) {
-        await db.cards.update(card.id, { isDeleted: true, updatedAt: now });
+        await db.cards.update(card.id, {
+          isDeleted: true,
+          updatedAt: nextTimestamp,
+        });
       }
     }
-    await db.decks.update(id, { isDeleted: true, updatedAt: now });
+    await db.decks.update(id, { isDeleted: true, updatedAt: nextTimestamp });
   });
 }

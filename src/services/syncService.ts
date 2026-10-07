@@ -231,8 +231,16 @@ export async function syncWithCloud(userId: string): Promise<SyncResult> {
       }
     }
 
+    const maxLocalDeck = await db.decks.orderBy("updatedAt").last();
+    const maxLocalCard = await db.cards.orderBy("updatedAt").last();
+    const maxLocalTime = Math.max(
+      maxLocalDeck?.updatedAt || 0,
+      maxLocalCard?.updatedAt || 0,
+      syncStartTime
+    );
+
     setLastSyncTime(userId, maxServerTime);
-    setLocalSyncTime(userId, syncStartTime);
+    setLocalSyncTime(userId, maxLocalTime);
 
     return {
       success: true,

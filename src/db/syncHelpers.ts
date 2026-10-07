@@ -1,4 +1,4 @@
-import { db } from "./schema";
+import { db, getNextTimestamp } from "./schema";
 import { type Deck, type Card } from "../types";
 
 export async function getModifiedDecksSince(
@@ -29,17 +29,18 @@ export async function linkGuestDataToUser(
   let decksCount = 0;
   let cardsCount = 0;
   await db.transaction("rw", db.decks, db.cards, async () => {
+    const nextTimestamp = await getNextTimestamp();
     const allDecks = await db.decks.toArray();
     for (const d of allDecks) {
       if (!d.userId && d.id) {
-        await db.decks.update(d.id, { userId, updatedAt: Date.now() });
+        await db.decks.update(d.id, { userId, updatedAt: nextTimestamp });
         decksCount++;
       }
     }
     const allCards = await db.cards.toArray();
     for (const c of allCards) {
       if (!c.userId && c.id) {
-        await db.cards.update(c.id, { userId, updatedAt: Date.now() });
+        await db.cards.update(c.id, { userId, updatedAt: nextTimestamp });
         cardsCount++;
       }
     }

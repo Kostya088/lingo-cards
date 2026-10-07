@@ -1,4 +1,4 @@
-import { db, generateUUID } from "./schema";
+import { db, generateUUID, getNextTimestamp } from "./schema";
 import { type Deck, type Card } from "../types";
 import { getDeckCards } from "./cardQueries";
 import { getDeckById } from "./deckQueries";
@@ -48,6 +48,7 @@ export async function importData(
   let decksImported = 0;
   let cardsImported = 0;
   const now = Date.now();
+  const nextTimestamp = await getNextTimestamp();
 
   if (parsed.deck && Array.isArray(parsed.cards)) {
     const originalDeck: Deck = parsed.deck;
@@ -65,7 +66,7 @@ export async function importData(
       nativeLanguage: originalDeck.nativeLanguage || "English",
       color: originalDeck.color || "emerald",
       createdAt: now,
-      updatedAt: now,
+      updatedAt: nextTimestamp,
       isDeleted: false,
     });
     decksImported++;
@@ -84,7 +85,7 @@ export async function importData(
       lastReviewedDate: c.lastReviewedDate,
       totalReviews: c.totalReviews ?? 0,
       createdAt: now,
-      updatedAt: now,
+      updatedAt: nextTimestamp,
       isDeleted: false,
     }));
 
@@ -106,7 +107,7 @@ export async function importData(
         nativeLanguage: d.nativeLanguage || "English",
         color: d.color || "emerald",
         createdAt: d.createdAt || now,
-        updatedAt: now,
+        updatedAt: nextTimestamp,
         isDeleted: false,
       });
       deckIdMap.set(oldId, newDeckId);
@@ -131,7 +132,7 @@ export async function importData(
           lastReviewedDate: c.lastReviewedDate,
           totalReviews: c.totalReviews ?? 0,
           createdAt: c.createdAt || now,
-          updatedAt: now,
+          updatedAt: nextTimestamp,
           isDeleted: false,
         });
       }

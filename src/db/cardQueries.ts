@@ -1,4 +1,4 @@
-import { db, generateUUID } from "./schema";
+import { db, generateUUID, getNextTimestamp } from "./schema";
 import { type Card } from "../types";
 
 export async function getDeckCards(deckId: string): Promise<Card[]> {
@@ -20,6 +20,7 @@ export async function createCard(
   notes?: string,
 ): Promise<string> {
   const now = Date.now();
+  const nextTimestamp = await getNextTimestamp();
   const id = generateUUID();
   const newCard: Card = {
     id,
@@ -34,7 +35,7 @@ export async function createCard(
     nextReviewDate: now,
     totalReviews: 0,
     createdAt: now,
-    updatedAt: now,
+    updatedAt: nextTimestamp,
     isDeleted: false,
   };
   await db.cards.add(newCard);
@@ -46,6 +47,7 @@ export async function createCardsBulk(
   cardsData: Array<{ front: string; back: string; notes?: string }>,
 ): Promise<number> {
   const now = Date.now();
+  const nextTimestamp = await getNextTimestamp();
   const newCards: Card[] = cardsData.map((c) => ({
     id: generateUUID(),
     deckId,
@@ -59,7 +61,7 @@ export async function createCardsBulk(
     nextReviewDate: now,
     totalReviews: 0,
     createdAt: now,
-    updatedAt: now,
+    updatedAt: nextTimestamp,
     isDeleted: false,
   }));
 
@@ -73,13 +75,13 @@ export async function updateCard(
 ): Promise<number> {
   return await db.cards.update(id, {
     ...data,
-    updatedAt: Date.now(),
+    updatedAt: await getNextTimestamp(),
   });
 }
 
 export async function deleteCard(id: string): Promise<void> {
   await db.cards.update(id, {
     isDeleted: true,
-    updatedAt: Date.now(),
+    updatedAt: await getNextTimestamp(),
   });
 }

@@ -32,3 +32,10 @@ export class FlashcardDatabase extends Dexie {
 }
 
 export const db = new FlashcardDatabase();
+
+export async function getNextTimestamp(): Promise<number> {
+  const maxDeck = await db.decks.orderBy("updatedAt").last();
+  const maxCard = await db.cards.orderBy("updatedAt").last();
+  const maxLocal = Math.max(maxDeck?.updatedAt || 0, maxCard?.updatedAt || 0);
+  return Math.max(Date.now(), maxLocal + 1);
+}
