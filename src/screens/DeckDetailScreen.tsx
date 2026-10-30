@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useRef, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useLiveQuery } from "dexie-react-hooks";
 import {
@@ -14,6 +14,9 @@ import {
   BookOpen,
   Calendar,
   Download,
+  ArrowUpDown,
+  ChevronDown,
+  Check,
 } from "lucide-react";
 import { getDeckById, getDeckCards, deleteCard, exportDeckAsText } from "../db";
 import { type MasteryLevel } from "../types";
@@ -35,6 +38,27 @@ export const DeckDetailScreen: React.FC = () => {
   const [selectedLevelFilter, setSelectedLevelFilter] = useState<
     "all" | MasteryLevel
   >("all");
+  const [sortOrder, setSortOrder] = useState<"newest" | "oldest">("newest");
+  const [isSortOpen, setIsSortOpen] = useState(false);
+  const sortMenuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!isSortOpen) return;
+    const handleClick = (e: MouseEvent) => {
+      if (!sortMenuRef.current?.contains(e.target as Node)) {
+        setIsSortOpen(false);
+      }
+    };
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setIsSortOpen(false);
+    };
+    document.addEventListener("mousedown", handleClick);
+    document.addEventListener("keydown", handleKey);
+    return () => {
+      document.removeEventListener("mousedown", handleClick);
+      document.removeEventListener("keydown", handleKey);
+    };
+  }, [isSortOpen]);
 
   const handleDeleteCard = async (cardId: string) => {
     const confirmed = window.confirm(
@@ -53,7 +77,7 @@ export const DeckDetailScreen: React.FC = () => {
   const handleExportDeck = async () => {
     if (!deckId) return;
     try {
-      const text = await exportDeckAsText(deckId);
+      const text = await exportDeckAsText(deckId, filteredCards);
       const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
@@ -73,7 +97,9 @@ export const DeckDetailScreen: React.FC = () => {
 
   const now = Date.now();
   const filteredCards = useMemo(() => {
-    return cards.filter((card) => {
+    const direction = sortOrder === "newest" ? -1 : 1;
+    return cards
+      .filter((card) => {
       if (selectedLevelFilter !== "all" && card.level !== selectedLevelFilter) {
         return false;
       }
@@ -86,8 +112,9 @@ export const DeckDetailScreen: React.FC = () => {
         );
       }
       return true;
-    });
-  }, [cards, searchQuery, selectedLevelFilter]);
+      })
+      .sort((a, b) => (a.createdAt - b.createdAt) * direction);
+  }, [cards, searchQuery, selectedLevelFilter, sortOrder]);
 
   const dueCount = useMemo(
     () => cards.filter((c) => c.nextReviewDate <= now).length,
@@ -264,8 +291,8 @@ export const DeckDetailScreen: React.FC = () => {
         </div>
       </div>
 
-      <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
-        <div className="p-4 border-b border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-slate-50/50 dark:bg-slate-800/30">
+      <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+        <div className="rounded-t-2xl p-4 border-b border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-slate-50/50 dark:bg-slate-800/30">
           <div className="flex items-center gap-1 overflow-x-auto pb-1 sm:pb-0 text-xs">
             {(["all", 0, 1, 2, 3] as const).map((lvl) => (
               <button
@@ -290,6 +317,55 @@ export const DeckDetailScreen: React.FC = () => {
             ))}
           </div>
 
+          <div className="flex items-center gap-2 w-full sm:w-auto">
+            <div className="relative shrink-0" ref={sortMenuRef}>
+              <button
+                onClick={() => setIsSortOpen((o) => !o)}
+                aria-haspopup="listbox"
+                aria-expanded={isSortOpen}
+                aria-label="Sort by date added"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700/60 focus:outline-none focus:ring-2 focus:ring-brand-500 transition-all"
+              >
+                <ArrowUpDown className="w-4 h-4 text-slate-400" />
+                {sortOrder === "newest" ? "Newest first" : "Oldest first"}
+                <ChevronDown
+                  className={`w-4 h-4 text-slate-400 transition-transform ${isSortOpen ? "rotate-180" : ""}`}
+                />
+              </button>
+              {isSortOpen && (
+                <div
+                  role="listbox"
+                  className="absolute left-0 sm:right-0 sm:left-auto z-20 mt-1.5 w-40 p-1 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-lg animate-fade-in"
+                >
+                  {(
+                    [
+                      ["newest", "Newest first"],
+                      ["oldest", "Oldest first"],
+                    ] as const
+                  ).map(([value, label]) => (
+                    <button
+                      key={value}
+                      role="option"
+                      aria-selected={sortOrder === value}
+                      onClick={() => {
+                        setSortOrder(value);
+                        setIsSortOpen(false);
+                      }}
+                      className={`w-full flex items-center justify-between gap-2 px-3 py-2 rounded-lg text-xs font-medium transition-colors ${
+                        sortOrder === value
+                          ? "bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white"
+                          : "text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/60"
+                      }`}
+                    >
+                      {label}
+                      {sortOrder === value && (
+                        <Check className="w-4 h-4 text-brand-600 dark:text-brand-400" />
+                      )}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
           <div className="relative w-full sm:w-60">
             <Search className="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
             <input
@@ -299,6 +375,7 @@ export const DeckDetailScreen: React.FC = () => {
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-8 pr-3 py-1.5 text-xs rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-500 transition-all"
             />
+          </div>
           </div>
         </div>
 
@@ -336,6 +413,7 @@ export const DeckDetailScreen: React.FC = () => {
             No cards found matching your search and filter criteria.
           </div>
         ) : (
+          <div className="overflow-hidden rounded-b-2xl">
           <CardList
             cards={filteredCards}
             onEditCard={(card) =>
@@ -343,6 +421,7 @@ export const DeckDetailScreen: React.FC = () => {
             }
             onDeleteCard={handleDeleteCard}
           />
+          </div>
         )}
       </div>
     </div>

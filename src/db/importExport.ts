@@ -149,9 +149,12 @@ export async function importData(
   return { decksImported, cardsImported };
 }
 
-export async function exportDeckAsText(deckId: string): Promise<string> {
+export async function exportDeckAsText(
+  deckId: string,
+  orderedCards?: Card[],
+): Promise<string> {
   const deck = await getDeckById(deckId);
-  const cards = await getDeckCards(deckId);
+  const cards = orderedCards ?? (await getDeckCards(deckId));
   const header = `# ${deck?.title || "Vocabulary"}\n# Format: Front - Back\n\n`;
   const body = cards
     .map((c) => `${c.front} - ${c.back}${c.notes ? ` // ${c.notes}` : ""}`)
